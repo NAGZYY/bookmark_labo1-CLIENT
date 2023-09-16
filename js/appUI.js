@@ -44,22 +44,44 @@ async function renderBookmarks() {
     $("#actionTitle").text("Liste des favoris");
     $("#createBookmark").show();
     $("#abort").hide();
-    let selectedCategory = $("#categoryDropdown").val(); // Récupérez la catégorie sélectionnée
 
+    // Chargez les favoris depuis le fichier JSON
     let bookmarks = await Bookmarks_API.Get();
     eraseContent();
 
     if (bookmarks !== null) {
-        bookmarks = filterBookmarksByCategory(bookmarks, selectedCategory); // Filtrer les favoris
-        bookmarks.forEach(bookmark => {
-            $("#content").append(renderBookmark(bookmark));
-        });
+        // Extraire les catégories distinctes des favoris
+        const categories = extractDistinctCategories(bookmarks);
 
-        // ... Reste du code pour attacher les gestionnaires d'événements
+        // Mettez à jour la liste déroulante de filtrage avec les catégories extraites
+        updateCategoryDropdown(categories);
+
+        // ... Reste du code pour afficher les favoris et attacher les gestionnaires d'événements
     } else {
         renderError("Service introuvable");
     }
 }
+
+function extractDistinctCategories(bookmarks) {
+    const categories = [...new Set(bookmarks.map(bookmark => bookmark.Category))];
+    return categories;
+}
+
+function updateCategoryDropdown(categories) {
+    const categoryDropdown = $("#categoryDropdown");
+
+    // Videz d'abord la liste déroulante
+    categoryDropdown.empty();
+
+    // Ajoutez l'option "Toutes les catégories"
+    categoryDropdown.append('<option value="Toutes">Toutes les catégories</option>');
+
+    // Ajoutez les catégories extraites à la liste déroulante
+    categories.forEach(category => {
+        categoryDropdown.append(`<option value="${category}">${category}</option>`);
+    });
+}
+
 
 function filterBookmarksByCategory(bookmarks, selectedCategory) {
     if (selectedCategory === "Toutes") {
