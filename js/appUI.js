@@ -1,5 +1,70 @@
 //<span class="cmdIcon fa-solid fa-ellipsis-vertical"></span>
+let contentScrollPosition = 0;
+Init_UI();
 
+function Init_UI() {
+    renderBookmarks();
+    $('#createBookmark').on("click", async function () {
+        saveContentScrollPosition();
+        renderCreateBookmarkForm();
+    });
+    $('#abort').on("click", async function () {
+        renderBookmarks();
+    });
+    $('#aboutCmd').on("click", function () {
+        renderAbout();
+    });
+}
+
+function renderAbout() {
+    saveContentScrollPosition();
+    eraseContent();
+    $("#createBookmark").hide();
+    $("#abort").show();
+    $("#actionTitle").text("À propos...");
+    $("#content").append(
+        $(`
+            <div class="aboutContainer">
+                <h2>Gestionnaire de favoris</h2>
+                <hr>
+                <p>
+                    Application de gestion de favoris.
+                </p>
+                <p>
+                    Auteur: Jérémy Racine
+                </p>
+                <p>
+                    Collège Lionel-Groulx 2023
+                </p>
+            </div>
+        `))
+}
+async function renderBookmarks() {
+    showWaitingGif();
+    $("#actionTitle").text("Liste des favoris");
+    $("#createBookmark").show();
+    $("#abort").hide();
+    let bookmarks = await Bookmarks_API.Get();
+    eraseContent();
+    if (bookmarks !== null) {
+        bookmarks.forEach(bookmark => {
+            $("#content").append(renderBookmark(bookmark));
+        });
+        restoreContentScrollPosition();
+        // Attached click events on command icons
+        $(".editCmd").on("click", function () {
+            saveContentScrollPosition();
+            renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
+        });
+        $(".deleteCmd").on("click", function () {
+            saveContentScrollPosition();
+            renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
+        });
+        $(".bookmarkRow").on("click", function (e) { e.preventDefault(); })
+    } else {
+        renderError("Service introuvable");
+    }
+}
 function showWaitingGif() {
     $("#content").empty();
     $("#content").append($("<div class='waitingGifcontainer'><img class='waitingGif' src='Loading_icon.gif' /></div>'"));
