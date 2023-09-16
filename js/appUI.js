@@ -109,8 +109,7 @@ async function renderDeleteBookmarkForm(id) {
     if (bookmark !== null) {
         const siteUrl = bookmark.Url;
 
-        // Récupérez l'URL de l'icône du site web avec une meilleure qualité
-        const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=45`;
+        const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
 
         $("#content").append(`
         <div class="bookmarkdeleteForm">
@@ -119,8 +118,9 @@ async function renderDeleteBookmarkForm(id) {
             <div class="bookmarkRow" bookmark_id=${bookmark.Id}">
                 <div class="bookmarkContainer">
                     <div class="bookmarkLayout">
-                        <div class="bookmarkName">${bookmark.Title}
+                        <div class="bookmarkName">
                             <img class="bookmarkIcon" src="${googleFaviconUrl}" alt="Icône du site" />
+                            ${bookmark.Title}
                         </div>
                         <div class="bookmarkCategory">${bookmark.Category}</div>
                     </div>
@@ -155,6 +155,8 @@ function newBookmark() {
     return bookmark;
 }
 function renderBookmarkForm(bookmark = null) {
+    const siteUrl = bookmark.Url;
+    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
     $("#createBookmark").hide();
     $("#abort").show();
     eraseContent();
@@ -164,7 +166,7 @@ function renderBookmarkForm(bookmark = null) {
     $("#content").append(`
         <form class="form" id="bookmarkForm">
             <input type="hidden" name="Id" value="${bookmark.Id}"/>
-            <img id="bookmarkIcon" src="bookmark-logo.svg" class="createBookmarkIcon" alt="Icône du favoris">
+            <img class="bookmarkIcon" src="${googleFaviconUrl}" alt="Icône du site" />
             <label for="Title" class="form-label">Titre </label>
             <input 
                 class="form-control Alpha"
