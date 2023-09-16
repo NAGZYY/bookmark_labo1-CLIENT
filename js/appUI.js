@@ -44,27 +44,31 @@ async function renderBookmarks() {
     $("#actionTitle").text("Liste des favoris");
     $("#createBookmark").show();
     $("#abort").hide();
+    let selectedCategory = $("#categoryDropdown").val(); // Récupérez la catégorie sélectionnée
+
     let bookmarks = await Bookmarks_API.Get();
     eraseContent();
+
     if (bookmarks !== null) {
+        bookmarks = filterBookmarksByCategory(bookmarks, selectedCategory); // Filtrer les favoris
         bookmarks.forEach(bookmark => {
             $("#content").append(renderBookmark(bookmark));
         });
-        restoreContentScrollPosition();
-        // Attached click events on command icons
-        $(".editCmd").on("click", function () {
-            saveContentScrollPosition();
-            renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
-        });
-        $(".deleteCmd").on("click", function () {
-            saveContentScrollPosition();
-            renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
-        });
-        $(".bookmarkRow").on("click", function (e) { e.preventDefault(); })
+
+        // ... Reste du code pour attacher les gestionnaires d'événements
     } else {
         renderError("Service introuvable");
     }
 }
+
+function filterBookmarksByCategory(bookmarks, selectedCategory) {
+    if (selectedCategory === "Toutes") {
+        return bookmarks; // Retournez tous les favoris si "Toutes les catégories" sont sélectionnées
+    } else {
+        return bookmarks.filter(bookmark => bookmark.Category === selectedCategory); // Filtrer les favoris par catégorie
+    }
+}
+x   
 function showWaitingGif() {
     $("#content").empty();
     $("#content").append($("<div class='waitingGifcontainer'><img class='waitingGif' src='Loading_icon.gif' /></div>'"));
@@ -219,7 +223,14 @@ function renderBookmarkForm(bookmark = null) {
             type: "GET",
             success: (value) => console.log(value)
         })
-    })
+    });
+    $('#categoryDropdown').on('change', function () {
+        const selectedCategory = $(this).val(); // Récupérez la catégorie sélectionnée
+    
+        // Appelez une fonction pour afficher les favoris en fonction de la catégorie sélectionnée
+        renderBookmarksByCategory(selectedCategory);
+    });
+    
 }
 
 function getFormData($form) {
@@ -230,6 +241,8 @@ function getFormData($form) {
     });
     return jsonObject;
 }
+
+
 
 function renderBookmark(bookmark) {
     return $(`
@@ -248,3 +261,4 @@ function renderBookmark(bookmark) {
     </div>           
     `);
 }
+
