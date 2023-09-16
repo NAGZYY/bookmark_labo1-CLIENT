@@ -162,7 +162,7 @@ function renderBookmarkForm(bookmark = null) {
     if (create) bookmark = newBookmark();
     $("#actionTitle").text(create ? "Création" : "Modification");
 
-    // Récupérez l'URL de l'icône du site web avec une meilleure qualité dès le départ
+    // Récupérez l'URL de l'icône du site dès le départ
     let siteUrl = bookmark.Url;
     let googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
 
@@ -246,7 +246,6 @@ function getFormData($form) {
 function renderBookmark(bookmark) {
     const siteUrl = bookmark.Url;
 
-    // Récupérez l'URL de l'icône du site web avec une meilleure qualité
     const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
 
     return $(`
