@@ -155,17 +155,9 @@ function newBookmark() {
     return bookmark;
 }
 function renderBookmarkForm(bookmark = null) {
-    const siteUrl = bookmark.Url;
-    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+
     $("#createBookmark").hide();
     $("#abort").show();
-    $('#Url').on("change", () => {
-        const siteUrl = $("#Url").val();
-        
-        const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
-        
-        $("#bookmarkIcon").attr("src", googleFaviconUrl);
-    });
     eraseContent();
     let create = bookmark == null;
     if (create) bookmark = newBookmark();
@@ -212,6 +204,13 @@ function renderBookmarkForm(bookmark = null) {
             <input type="button" value="Annuler" id="cancel" class="btn btn-secondary">
         </form>
     `);
+    $('#Url').on("change", () => {
+        const siteUrl = $("#Url").val();
+        
+        const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+        
+        $("#bookmarkIcon").attr("src", googleFaviconUrl);
+    });
     initFormValidation();
     $('#bookmarkForm').on("submit", async function (event) {
         event.preventDefault();
@@ -226,13 +225,6 @@ function renderBookmarkForm(bookmark = null) {
     });
     $('#cancel').on("click", function () {
         renderBookmarks();
-    });
-    $('#Url').on("change", () => {
-        const siteUrl = $("#Url").val();
-        
-        const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
-        
-        $("#bookmarkIcon").attr("src", googleFaviconUrl);
     });
     $('#Url').on("change", () => {
         let site = $("#Url").text
