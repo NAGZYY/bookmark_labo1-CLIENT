@@ -200,10 +200,8 @@ function renderBookmarkForm(bookmark = null) {
     $('#Url').on("change", () => {
         const siteUrl = $("#Url").val();
         
-        // Vous pouvez utiliser l'API de Google pour obtenir l'icône du site en fonction de l'URL
         const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
         
-        // Mettez à jour l'attribut src de l'élément d'icône avec la nouvelle URL
         $("#bookmarkIcon").attr("src", googleFaviconUrl);
     });
     initFormValidation();
@@ -245,7 +243,7 @@ function renderBookmark(bookmark) {
      <div class="bookmarkRow" bookmark_id=${bookmark.Id}">
         <div class="bookmarkContainer noselect">
             <div class="bookmarkLayout">
-                <div class="bookmarkIcon">${bookmark.Url}</div>
+            <img id="bookmarkIcon" src="bookmark-logo.svg" class="createBookmarkIcon" alt="Icône du favoris">
                 <span class="bookmarkTitle">${bookmark.Title}</span>
                 <span class="bookmarkCategory">${bookmark.Category}</span>
             </div>
