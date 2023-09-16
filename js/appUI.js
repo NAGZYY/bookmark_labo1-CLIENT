@@ -67,18 +67,35 @@ async function renderBookmarks() {
             renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
         });
         $(".bookmarkRow").on("click", function (e) { e.preventDefault(); })
-        // Code pour extraire les catégories distinctes de vos favoris
+        / Code pour extraire les catégories distinctes de vos favoris
         const categories = extractDistinctCategories(bookmarks);
-        // Code pour mettre à jour la liste déroulante des catégories
-        updateCategoryDropdown(categories);
-        // Code pour filtrer les favoris en fonction des catégories sélectionnées
-        bookmarks = filterBookmarksByCategory(bookmarks, selectedCategories);
+        
+        // Remplir les options de la liste déroulante
+        const categoryDropdown = $("#categoryFilter");
+        categoryDropdown.empty();
+        categoryDropdown.append('<option value="Toutes">Toutes les catégories</option>');
+        categories.forEach(category => {
+            categoryDropdown.append(`<option value="${category}">${category}</option>`);
+        });
+
+        // Obtenez la catégorie sélectionnée
+        const selectedCategory = $("#categoryFilter").val();
+
+        // Filtrer les favoris en fonction de la catégorie sélectionnée
+        if (selectedCategory !== "Toutes") {
+            bookmarks = bookmarks.filter(bookmark => bookmark.Category === selectedCategory);
+        }
 
         bookmarks.forEach(bookmark => {
             $("#content").append(renderBookmark(bookmark));
         });
 
-        // ... Reste du code pour attacher les gestionnaires d'événements
+        restoreContentScrollPosition();
+        
+        // Attachez un gestionnaire d'événements pour suivre les changements de sélection
+        $("#categoryFilter").on("change", function () {
+            renderBookmarks(); // Lorsque l'utilisateur change la catégorie, réexécutez la fonction pour mettre à jour la liste
+        });
     } else {
         renderError("Service introuvable");
     }
