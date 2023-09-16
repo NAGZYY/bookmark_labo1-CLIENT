@@ -66,6 +66,50 @@ async function renderBookmarks() {
     }
 }
 
+// Fonction pour générer dynamiquement les éléments de catégorie
+function generateCategoryFilters(categories) {
+    const dropdownMenu = $(".dropdown-menu");
+
+    // Supprimer d'abord les anciens éléments de catégorie
+    dropdownMenu.find(".category-filter").remove();
+
+    // Créer un élément pour "Toutes les catégories"
+    const allCategoriesItem = $('<div class="dropdown-item category-filter" data-category="Toutes"><i class="menuIcon fa fa-check-square"></i> Toutes les catégories</div>');
+    dropdownMenu.append(allCategoriesItem);
+    dropdownMenu.append('<div class="dropdown-divider"></div>');
+
+    // Créer des éléments de catégorie pour chaque catégorie unique
+    categories.forEach(category => {
+        const categoryItem = $(`<div class="dropdown-item category-filter" data-category="${category}"><i class="menuIcon fa fa-square"></i> ${category}</div>`);
+        dropdownMenu.append(categoryItem);
+    });
+
+    // Gérer le clic sur les filtres de catégorie
+    $(".category-filter").on("click", function () {
+        const selectedCategory = $(this).data("category");
+        filterBookmarksByCategory(selectedCategory);
+        updateCategoryFilterUI(selectedCategory);
+    });
+}
+
+// Fonction pour extraire les catégories distinctes des favoris
+function extractDistinctCategories(bookmarks) {
+    const categories = [...new Set(bookmarks.map(bookmark => bookmark.Category))];
+    return categories;
+}
+
+// Au chargement de la page, extrayez les catégories distinctes et générez les filtres de catégorie
+$(document).ready(async function () {
+    const bookmarks = await Bookmarks_API.Get();
+    if (bookmarks !== null) {
+        const categories = extractDistinctCategories(bookmarks);
+        generateCategoryFilters(categories);
+        renderBookmarks();
+    } else {
+        renderError("Service introuvable");
+    }
+});
+
 function showWaitingGif() {
     $("#content").empty();
     $("#content").append($("<div class='waitingGifcontainer'><img class='waitingGif' src='Loading_icon.gif' /></div>'"));
