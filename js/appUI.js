@@ -166,6 +166,9 @@ function renderBookmarkForm(bookmark = null) {
     if (bookmark.Url != null) {
         let siteUrl = bookmark.Url;
         let googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+    } else {
+        let siteUrl = bookmark.Url;
+        let googleFaviconUrl = 'bookmark-logo.svg';
     }
 
     $("#content").append(`
