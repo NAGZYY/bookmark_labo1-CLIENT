@@ -44,53 +44,73 @@ async function renderBookmarks() {
     $("#actionTitle").text("Liste des favoris");
     $("#createBookmark").show();
     $("#abort").hide();
-    let selectedCategory = $("#categoryDropdown").val(); // Récupérez la catégorie sélectionnée
-
     let bookmarks = await Bookmarks_API.Get();
     eraseContent();
-
     if (bookmarks !== null) {
-        const categories = extractDistinctCategories(bookmarks);
-        updateCategoryDropdown(categories);
-        bookmarks = filterBookmarksByCategory(bookmarks, selectedCategory); // Filtrer les favoris
         bookmarks.forEach(bookmark => {
             $("#content").append(renderBookmark(bookmark));
         });
-
-        // ... Reste du code pour attacher les gestionnaires d'événements
+        restoreContentScrollPosition();
+        // Attached click events on command icons
+        $(".editCmd").on("click", function () {
+            saveContentScrollPosition();
+            renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
+        });
+        $(".deleteCmd").on("click", function () {
+            saveContentScrollPosition();
+            renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
+        });
+        $(".bookmarkRow").on("click", function (e) { e.preventDefault(); })
     } else {
         renderError("Service introuvable");
     }
 }
 
-function extractDistinctCategories(bookmarks) {
-    const categories = [...new Set(bookmarks.map(bookmark => bookmark.Category))];
-    return categories;
-}
+unction generateCategoryFilters(categories) {
+    const dropdownMenu = $(".dropdown-menu");
 
-function updateCategoryDropdown(categories) {
-    const categoryDropdown = $("#categoryDropdown");
+    // Supprimer d'abord les anciens éléments de catégorie
+    dropdownMenu.find(".category-filter").remove();
 
-    // Videz d'abord la liste déroulante
-    categoryDropdown.empty();
+    // Créer un élément pour "Toutes les catégories"
+    const allCategoriesItem = $('<div class="dropdown-item category-filter" data-category="Toutes"><i class="menuIcon fa fa-check-square"></i> Toutes les catégories</div>');
+    dropdownMenu.append(allCategoriesItem);
+    dropdownMenu.append('<div class="dropdown-divider"></div>');
 
-    // Ajoutez l'option "Toutes les catégories"
-    categoryDropdown.append('<option value="Toutes">Toutes les catégories</option>');
-
-    // Ajoutez les catégories extraites à la liste déroulante
+    // Créer des éléments de catégorie pour chaque catégorie unique
     categories.forEach(category => {
-        categoryDropdown.append(`<option value="${category}">${category}</option>`);
+        const categoryItem = $(`<div class="dropdown-item category-filter" data-category="${category}"><i class="menuIcon fa fa-square"></i> ${category}</div>`);
+        dropdownMenu.append(categoryItem);
+    });
+
+    // Gérer le clic sur les filtres de catégorie
+    $(".category-filter").on("click", function () {
+        const selectedCategory = $(this).data("category");
+        filterBookmarksByCategory(selectedCategory);
+        updateCategoryFilterUI(selectedCategory);
     });
 }
 
-function filterBookmarksByCategory(bookmarks, selectedCategory) {
+// Fonction pour filtrer les favoris par catégorie
+function filterBookmarksByCategory(selectedCategory) {
     if (selectedCategory === "Toutes") {
-        return bookmarks; // Retournez tous les favoris si "Toutes les catégories" sont sélectionnées
+        renderBookmarks(); // Afficher tous les favoris si "Toutes les catégories" sont sélectionnées
     } else {
-        return bookmarks.filter(bookmark => bookmark.Category === selectedCategory); // Filtrer les favoris par catégorie
+        const filteredBookmarks = bookmarks.filter(bookmark => bookmark.Category === selectedCategory);
+        eraseContent();
+        filteredBookmarks.forEach(bookmark => {
+            $("#content").append(renderBookmark(bookmark));
+        });
+        // Attachez les gestionnaires d'événements comme vous le faisiez auparavant
     }
 }
-x   
+
+// Gérer le clic sur "Toutes les catégories"
+$("#allCategories").on("click", function () {
+    filterBookmarksByCategory("Toutes");
+    updateCategoryFilterUI("Toutes");
+});
+
 function showWaitingGif() {
     $("#content").empty();
     $("#content").append($("<div class='waitingGifcontainer'><img class='waitingGif' src='Loading_icon.gif' /></div>'"));
