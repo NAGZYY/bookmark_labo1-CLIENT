@@ -240,9 +240,11 @@ function getFormData($form) {
 
 function renderBookmark(bookmark) {
     const siteUrl = bookmark.Url;
-    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=32`;
 
-    bookmarkLink.append(`
+    // Récupérez l'URL de l'icône du site web avec une meilleure qualité
+    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+
+    return $(`
      <div class="bookmarkRow" bookmark_id=${bookmark.Id}">
         <div class="bookmarkContainer noselect">
             <div class="bookmarkLayout">
@@ -264,3 +266,4 @@ function renderBookmark(bookmark) {
     </div>           
     `);
 }
+
