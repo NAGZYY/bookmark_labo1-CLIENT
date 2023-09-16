@@ -155,8 +155,6 @@ function newBookmark() {
     return bookmark;
 }
 function renderBookmarkForm(bookmark = null) {
-    //const siteUrl = bookmark.Url;
-    //const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
     $("#createBookmark").hide();
     $("#abort").show();
     eraseContent();
@@ -166,7 +164,7 @@ function renderBookmarkForm(bookmark = null) {
     $("#content").append(`
         <form class="form" id="bookmarkForm">
             <input type="hidden" name="Id" value="${bookmark.Id}"/>
-            <img class="bookmarkIcon" src="${googleFaviconUrl}" alt="Icône du site" />
+            <img id="bookmarkIcon" src="bookmark-logo.svg" class="createBookmarkIcon" alt="Icône du favoris">
             <label for="Title" class="form-label">Titre </label>
             <input 
                 class="form-control Alpha"
@@ -205,13 +203,6 @@ function renderBookmarkForm(bookmark = null) {
             <input type="button" value="Annuler" id="cancel" class="btn btn-secondary">
         </form>
     `);
-    $('#Url').on("change", () => {
-        const siteUrl = $("#Url").val();
-        
-        const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
-        
-        $("#bookmarkIcon").attr("src", googleFaviconUrl);
-    });
     initFormValidation();
     $('#bookmarkForm').on("submit", async function (event) {
         event.preventDefault();
@@ -235,6 +226,13 @@ function renderBookmarkForm(bookmark = null) {
             success: (value) => console.log(value)
         })
     })
+    $('#Url').on("change", () => {
+        const siteUrl = $("#Url").val();
+        
+        const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+        
+        $("#bookmarkIcon").attr("src", googleFaviconUrl);
+    });
 }
 
 function getFormData($form) {
