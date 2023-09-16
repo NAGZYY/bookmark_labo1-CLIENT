@@ -161,20 +161,10 @@ function renderBookmarkForm(bookmark = null) {
     let create = bookmark == null;
     if (create) bookmark = newBookmark();
     $("#actionTitle").text(create ? "Création" : "Modification");
-
-    // Récupérez l'URL de l'icône du site web avec une meilleure qualité dès le départ
-    if (bookmark.Url != null) {
-        let siteUrl = bookmark.Url;
-        let googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
-    } else {
-        let siteUrl = bookmark.Url;
-        let googleFaviconUrl = `https://www.google.com/s2/favicons?domain=https://gelatinous-quartz-quince.glitch.me&sz=64`;
-    }
-
     $("#content").append(`
         <form class="form" id="bookmarkForm">
             <input type="hidden" name="Id" value="${bookmark.Id}"/>
-            <img id="bookmarkIcon" src="${googleFaviconUrl}" class="createBookmarkIcon" alt="Icône du favoris">
+            <img id="bookmarkIcon" src="${bookmark.Url ? getFaviconUrl(bookmark.Url) : 'bookmark-logo.svg'}" class="createBookmarkIcon" alt="Icône du favoris">
             <label for="Title" class="form-label">Titre </label>
             <input 
                 class="form-control Alpha"
