@@ -1,5 +1,7 @@
 //<span class="cmdIcon fa-solid fa-ellipsis-vertical"></span>
 let contentScrollPosition = 0;
+let selectedCategories = new Set(); // Pour stocker les catégories sélectionnées
+
 Init_UI();
 
 function Init_UI() {
@@ -14,31 +16,26 @@ function Init_UI() {
     $('#aboutCmd').on("click", function () {
         renderAbout();
     });
+    // Gérer le clic sur les éléments de catégorie
+    $(document).on("click", '.category-filter', function () {
+        const category = $(this).data('category');
+        toggleCategoryFilter(category);
+        renderBookmarks();
+    });
 }
 
-function renderAbout() {
-    saveContentScrollPosition();
-    eraseContent();
-    $("#createBookmark").hide();
-    $("#abort").show();
-    $("#actionTitle").text("À propos...");
-    $("#content").append(
-        $(`
-            <div class="aboutContainer">
-                <h2>Gestionnaire de favoris</h2>
-                <hr>
-                <p>
-                    Application de gestion de favoris.
-                </p>
-                <p>
-                    Auteur: Jérémy Racine
-                </p>
-                <p>
-                    Collège Lionel-Groulx 2023
-                </p>
-            </div>
-        `))
+function toggleCategoryFilter(category) {
+    if (selectedCategories.has(category)) {
+        selectedCategories.delete(category);
+    } else {
+        selectedCategories.add(category);
+    }
 }
+
+function isCategorySelected(category) {
+    return selectedCategories.size === 0 || selectedCategories.has(category);
+}
+
 async function renderBookmarks() {
     showWaitingGif();
     $("#actionTitle").text("Liste des favoris");
@@ -48,9 +45,8 @@ async function renderBookmarks() {
     eraseContent();
     if (bookmarks !== null) {
         const categories = extractDistinctCategories(bookmarks);
-        generateCategoryFilters(categories);
-        filterBookmarksByCategory("Toutes"); // Filtrer par "Toutes les catégories" au chargement initial
-        renderBookmarks();
+        renderCategoryFilters(categories); // Afficher les filtres de catégorie
+        bookmarks = filterBookmarksByCategory(bookmarks);
         bookmarks.forEach(bookmark => {
             $("#content").append(renderBookmark(bookmark));
         });
@@ -70,35 +66,25 @@ async function renderBookmarks() {
     }
 }
 
-function generateCategoryFilters(categories) {
-    const dropdownMenu = $(".dropdown-menu");
+function renderCategoryFilters(categories) {
+    const filtersContainer = $(".filters-container");
+    filtersContainer.empty();
 
-    // Supprimer d'abord les anciens éléments de catégorie
-    dropdownMenu.find(".category-filter").remove();
+    const allCategoriesItem = $(`<div class="category-filter" data-category="Toutes">Toutes les catégories</div>`);
+    filtersContainer.append(allCategoriesItem);
 
-    // Créer un élément pour "Toutes les catégories"
-    const allCategoriesItem = $('<div class="dropdown-item category-filter" data-category="Toutes"><i class="menuIcon fa fa-square"></i> Toutes les catégories</div>');
-    dropdownMenu.append(allCategoriesItem);
-    dropdownMenu.append('<div class="dropdown-divider"></div>');
-
-    // Créer des éléments de catégorie pour chaque catégorie unique
     categories.forEach(category => {
-        const categoryItem = $(`<div class="dropdown-item category-filter" data-category="${category}"><i class="menuIcon fa fa-square"></i> ${category}</div>`);
-        dropdownMenu.append(categoryItem);
-    });
-
-    // Gérer le clic sur les filtres de catégorie
-    $(".category-filter").on("click", function () {
-        const selectedCategory = $(this).data("category");
-        filterBookmarksByCategory(selectedCategory);
-        updateCategoryFilterUI(selectedCategory);
+        const categoryItem = $(`<div class="category-filter" data-category="${category}">${category}</div>`);
+        filtersContainer.append(categoryItem);
     });
 }
 
-// Fonction pour mettre à jour l'état du filtre de catégorie
-function updateCategoryFilterUI(selectedCategory) {
-    $(".category-filter i").removeClass("fa-check-square").addClass("fa-square");
-    $(`.category-filter[data-category="${selectedCategory}"] i`).removeClass("fa-square").addClass("fa-check-square");
+function filterBookmarksByCategory(bookmarks) {
+    if (selectedCategories.has("Toutes")) {
+        return bookmarks; // Retournez tous les favoris si "Toutes les catégories" sont sélectionnées
+    } else {
+        return bookmarks.filter(bookmark => isCategorySelected(bookmark.Category)); // Filtrer les favoris par catégorie
+    }
 }
 
 function showWaitingGif() {
