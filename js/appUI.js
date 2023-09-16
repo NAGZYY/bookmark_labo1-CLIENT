@@ -47,6 +47,10 @@ async function renderBookmarks() {
     let bookmarks = await Bookmarks_API.Get();
     eraseContent();
     if (bookmarks !== null) {
+        const categories = extractDistinctCategories(bookmarks);
+        generateCategoryFilters(categories);
+        filterBookmarksByCategory("Toutes"); // Filtrer par "Toutes les catégories" au chargement initial
+        renderBookmarks();
         bookmarks.forEach(bookmark => {
             $("#content").append(renderBookmark(bookmark));
         });
@@ -66,7 +70,6 @@ async function renderBookmarks() {
     }
 }
 
-// Fonction pour générer dynamiquement les éléments de catégorie
 function generateCategoryFilters(categories) {
     const dropdownMenu = $(".dropdown-menu");
 
@@ -74,7 +77,7 @@ function generateCategoryFilters(categories) {
     dropdownMenu.find(".category-filter").remove();
 
     // Créer un élément pour "Toutes les catégories"
-    const allCategoriesItem = $('<div class="dropdown-item category-filter" data-category="Toutes"><i class="menuIcon fa fa-check-square"></i> Toutes les catégories</div>');
+    const allCategoriesItem = $('<div class="dropdown-item category-filter" data-category="Toutes"><i class="menuIcon fa fa-square"></i> Toutes les catégories</div>');
     dropdownMenu.append(allCategoriesItem);
     dropdownMenu.append('<div class="dropdown-divider"></div>');
 
@@ -92,23 +95,11 @@ function generateCategoryFilters(categories) {
     });
 }
 
-// Fonction pour extraire les catégories distinctes des favoris
-function extractDistinctCategories(bookmarks) {
-    const categories = [...new Set(bookmarks.map(bookmark => bookmark.Category))];
-    return categories;
+// Fonction pour mettre à jour l'état du filtre de catégorie
+function updateCategoryFilterUI(selectedCategory) {
+    $(".category-filter i").removeClass("fa-check-square").addClass("fa-square");
+    $(`.category-filter[data-category="${selectedCategory}"] i`).removeClass("fa-square").addClass("fa-check-square");
 }
-
-// Au chargement de la page, extrayez les catégories distinctes et générez les filtres de catégorie
-$(document).ready(async function () {
-    const bookmarks = await Bookmarks_API.Get();
-    if (bookmarks !== null) {
-        const categories = extractDistinctCategories(bookmarks);
-        generateCategoryFilters(categories);
-        renderBookmarks();
-    } else {
-        renderError("Service introuvable");
-    }
-});
 
 function showWaitingGif() {
     $("#content").empty();
