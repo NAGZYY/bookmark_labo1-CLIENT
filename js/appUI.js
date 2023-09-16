@@ -240,30 +240,29 @@ function getFormData($form) {
 
 function renderBookmark(bookmark) {
     const siteUrl = bookmark.Url;
-
-    // Récupérez l'URL de l'icône du site web avec une meilleure qualité
-    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=32`;
 
     return $(`
-     <div class="bookmarkRow" bookmark_id=${bookmark.Id}">
-        <div class="bookmarkContainer noselect">
-            <div class="bookmarkLayout">
-                <a href="${siteUrl}" target="_blank">
-                    <img class="bookmarkIcon" src="${googleFaviconUrl}" alt="Icône du site" />
-                </a>
-                <a href="${siteUrl}" target="_blank">
-                    <span class="bookmarkTitle">${bookmark.Title}</span>
-                </a>
-                <a href="${siteUrl}" target="_blank">
-                    <span class="bookmarkCategory">${bookmark.Category}</span>
-                </a>
-            </div>
-            <div class="bookmarkCommandPanel">
-                <span class="editCmd cmdIcon fa fa-pencil" editBookmarkId="${bookmark.Id}" title="Modifier ${bookmark.Title}"></span>
-                <span class="deleteCmd cmdIcon fa fa-trash" deleteBookmarkId="${bookmark.Id}" title="Effacer ${bookmark.Title}"></span>
+        <div class="bookmarkRow" bookmark_id=${bookmark.Id}">
+            <div class="bookmarkContainer noselect">
+                <div class="bookmarkLayout">
+                    <a href="${siteUrl}" target="_blank">
+                        <img class="bookmarkIcon" src="${googleFaviconUrl}" alt="Icône du site" />
+                    </a>
+                    <a href="${siteUrl}" target="_blank">
+                        <span class="bookmarkTitle">${bookmark.Title}</span>
+                    </a>
+                    <a href="${siteUrl}" target="_blank">
+                        <span class="bookmarkCategory">${bookmark.Category}</span>
+                    </a>
+                </div>
+                <div class="bookmarkCommandPanel">
+                    <span class="editCmd cmdIcon fa fa-pencil" editBookmarkId="${bookmark.Id}" title="Modifier ${bookmark.Title}"></span>
+                    <span class="deleteCmd cmdIcon fa fa-trash" deleteBookmarkId="${bookmark.Id}" title="Effacer ${bookmark.Title}"></span>
+                </div>
             </div>
         </div>
-    </div>           
     `);
 }
+
 
