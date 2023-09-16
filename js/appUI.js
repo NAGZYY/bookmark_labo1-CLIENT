@@ -41,6 +41,8 @@ function renderAbout() {
 }
 async function renderBookmarks() {
     showWaitingGif();
+    const categories = extractDistinctCategories(bookmarks);
+    generateCategoryFilters(categories);
     $("#actionTitle").text("Liste des favoris");
     $("#createBookmark").show();
     $("#abort").hide();
@@ -64,6 +66,39 @@ async function renderBookmarks() {
     } else {
         renderError("Service introuvable");
     }
+}
+
+function generateCategoryFilters(categories) {
+    const dropdownMenu = $(".dropdown-menu");
+
+    // Supprimer d'abord les anciens éléments de catégorie
+    dropdownMenu.find(".category-filter").remove();
+
+    // Créer un élément pour "Toutes les catégories"
+    const allCategoriesItem = $('<div class="dropdown-item category-filter" data-category="Toutes"><i class="menuIcon fa fa-check-square"></i> Toutes les catégories</div>');
+    dropdownMenu.append(allCategoriesItem);
+    dropdownMenu.append('<div class="dropdown-divider"></div>');
+
+    // Créer des éléments de catégorie pour chaque catégorie unique
+    categories.forEach(category => {
+        const categoryItem = $(`<div class="dropdown-item category-filter" data-category="${category}"><i class="menuIcon fa fa-square"></i> ${category}</div>`);
+        dropdownMenu.append(categoryItem);
+    });
+
+    // Gérer le clic sur les filtres de catégorie
+    $(".category-filter").on("click", function () {
+        const selectedCategory = $(this).data("category");
+        filterBookmarksByCategory(selectedCategory);
+        updateCategoryFilterUI(selectedCategory);
+    });
+}
+
+// ...
+
+// Fonction pour mettre à jour l'apparence du filtre de catégorie sélectionné
+function updateCategoryFilterUI(selectedCategory) {
+    $(".category-filter").find("i").removeClass("fa-check-square").addClass("fa-square");
+    $(`.category-filter[data-category="${selectedCategory}"]`).find("i").removeClass("fa-square").addClass("fa-check-square");
 }
 
 
