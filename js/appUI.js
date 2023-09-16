@@ -250,7 +250,7 @@ function renderBookmark(bookmark) {
     const siteUrl = bookmark.Url;
 
     // Récupérez l'URL de l'icône du site web avec une meilleure qualité
-    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=45`;
+    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
 
     return $(`
      <div class="bookmarkRow" bookmark_id=${bookmark.Id}">
