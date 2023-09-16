@@ -53,6 +53,20 @@ async function renderBookmarks() {
     eraseContent();
 
     if (bookmarks !== null) {
+        bookmarks.forEach(bookmark => {
+            $("#content").append(renderBookmark(bookmark));
+        });
+        restoreContentScrollPosition();
+        // Attached click events on command icons
+        $(".editCmd").on("click", function () {
+            saveContentScrollPosition();
+            renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
+        });
+        $(".deleteCmd").on("click", function () {
+            saveContentScrollPosition();
+            renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
+        });
+        $(".bookmarkRow").on("click", function (e) { e.preventDefault(); })
         // Code pour extraire les catégories distinctes de vos favoris
         const categories = extractDistinctCategories(bookmarks);
         // Code pour mettre à jour la liste déroulante des catégories
@@ -105,6 +119,8 @@ function filterBookmarksByCategory(bookmarks, selectedCategories) {
         return bookmarks.filter(bookmark => selectedCategories.includes(bookmark.Category)); // Filtrer les favoris par catégorie
     }
 }
+
+
 function showWaitingGif() {
     $("#content").empty();
     $("#content").append($("<div class='waitingGifcontainer'><img class='waitingGif' src='Loading_icon.gif' /></div>'"));
