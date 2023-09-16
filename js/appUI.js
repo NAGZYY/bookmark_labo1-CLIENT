@@ -155,10 +155,15 @@ function newBookmark() {
     return bookmark;
 }
 function renderBookmarkForm(bookmark = null) {
-    const siteUrl = bookmark.Url;
+    $('#Url').on("change", () => {
+        const siteUrl = $("#Url").val();
+
     const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+    
     $("#createBookmark").hide();
     $("#abort").show();
+
+    $("#bookmarkIcon").attr("src", googleFaviconUrl);
     eraseContent();
     let create = bookmark == null;
     if (create) bookmark = newBookmark();
