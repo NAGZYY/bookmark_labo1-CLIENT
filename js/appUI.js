@@ -165,6 +165,7 @@ function renderBookmarkForm(bookmark = null) {
     // Récupérez l'URL de l'icône du site web avec une meilleure qualité dès le départ
     let siteUrl = bookmark.Url;
     let googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+    if (siteUrl == null) googleFaviconUrl = 'bookmark-logo.svg';
 
     $("#content").append(`
         <form class="form" id="bookmarkForm">
