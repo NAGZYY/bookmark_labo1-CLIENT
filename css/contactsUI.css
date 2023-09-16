@@ -9,7 +9,7 @@
     display: grid;
     grid-template-columns: 4fr 1fr;
     align-items: top;
-    background-color: rgba(210, 210, 210, 0.663);
+    background-color: rgba(210, 210, 210, 0.341);
     border-radius: 6px;
 }
 

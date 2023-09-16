@@ -163,9 +163,10 @@ function renderBookmarkForm(bookmark = null) {
     $("#actionTitle").text(create ? "Création" : "Modification");
 
     // Récupérez l'URL de l'icône du site web avec une meilleure qualité dès le départ
-    let siteUrl = bookmark.Url;
-    let googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
-    if (siteUrl.length > 1) { googleFaviconUrl = 'bookmark-logo.svg'; }
+    if (bookmark.Url != null) {
+        let siteUrl = bookmark.Url;
+        let googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+    }
 
     $("#content").append(`
         <form class="form" id="bookmarkForm">
