@@ -66,7 +66,7 @@ async function renderBookmarks() {
     }
 }
 
-unction generateCategoryFilters(categories) {
+function generateCategoryFilters(categories) {
     const dropdownMenu = $(".dropdown-menu");
 
     // Supprimer d'abord les anciens éléments de catégorie
