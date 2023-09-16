@@ -197,6 +197,15 @@ function renderBookmarkForm(bookmark = null) {
             <input type="button" value="Annuler" id="cancel" class="btn btn-secondary">
         </form>
     `);
+    $('#Url').on("change", () => {
+        const siteUrl = $("#Url").val();
+        
+        // Vous pouvez utiliser l'API de Google pour obtenir l'icône du site en fonction de l'URL
+        const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=16`;
+        
+        // Mettez à jour l'attribut src de l'élément d'icône avec la nouvelle URL
+        $("#bookmarkIcon").attr("src", googleFaviconUrl);
+    });
     initFormValidation();
     $('#bookmarkForm').on("submit", async function (event) {
         event.preventDefault();
