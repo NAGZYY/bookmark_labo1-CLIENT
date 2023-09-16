@@ -240,19 +240,18 @@ function getFormData($form) {
 
 function renderBookmark(bookmark) {
     const siteUrl = bookmark.Url;
+    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
 
-    // Récupérez l'URL de l'icône du site web avec une meilleure qualité
-    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=16`;
+    // Créez un élément <a> avec l'URL du site en tant que lien
+    const bookmarkLink = $(`<a href="${siteUrl}" target="_blank"></a>`);
 
-    return $(`
+    bookmarkLink.append(`
      <div class="bookmarkRow" bookmark_id=${bookmark.Id}">
         <div class="bookmarkContainer noselect">
             <div class="bookmarkLayout">
-                <a href="${bookmark.Url}">
                 <img class="bookmarkIcon" src="${googleFaviconUrl}" alt="Icône du site" />
                 <span class="bookmarkTitle">${bookmark.Title}</span>
                 <span class="bookmarkCategory">${bookmark.Category}</span>
-                </a>
             </div>
             <div class="bookmarkCommandPanel">
                 <span class="editCmd cmdIcon fa fa-pencil" editBookmarkId="${bookmark.Id}" title="Modifier ${bookmark.Title}"></span>
@@ -261,4 +260,6 @@ function renderBookmark(bookmark) {
         </div>
     </div>           
     `);
+
+    return bookmarkLink;
 }
