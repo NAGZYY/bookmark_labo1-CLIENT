@@ -28,13 +28,13 @@ function renderAbout() {
                 <h2>Gestionnaire de favoris</h2>
                 <hr>
                 <p>
-                    Petite application de gestion de favoris.
+                    Application de gestion de favoris.
                 </p>
                 <p>
-                    Auteur: Alexis Perreault
+                    Auteur: Jérémy Racine
                 </p>
                 <p>
-                    Collège Lionel-Groulx, automne 2023
+                    Collège Lionel-Groulx 2023
                 </p>
             </div>
         `))
