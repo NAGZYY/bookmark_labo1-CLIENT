@@ -155,8 +155,8 @@ function newBookmark() {
     return bookmark;
 }
 function renderBookmarkForm(bookmark = null) {
-    const siteUrl = bookmark.Url;
-    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+    //const siteUrl = bookmark.Url;
+    //const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
     $("#createBookmark").hide();
     $("#abort").show();
     eraseContent();
