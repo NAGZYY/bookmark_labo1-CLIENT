@@ -94,70 +94,11 @@ function renderCreateBookmarkForm() {
 async function renderEditBookmarkForm(id) {
     showWaitingGif();
     let bookmark = await Bookmarks_API.Get(id);
-    if (bookmark !== null) {
-        eraseContent();
-        $("#createBookmark").hide();
-        $("#abort").show();
-        $("#actionTitle").text("Modification");
-        
-        $("#content").append(`
-            <form class="form" id="bookmarkForm">
-                <input type="hidden" name="Id" value="${bookmark.Id}"/>
-                <img id="bookmarkIcon" src="${bookmark.Url ? getFaviconUrl(bookmark.Url) : 'bookmark-logo.svg'}" class="createBookmarkIcon" alt="Icône du favoris">
-                <label for="Title" class="form-label">Titre </label>
-                <input 
-                    class="form-control Alpha"
-                    name="Title" 
-                    id="Title" 
-                    placeholder="Titre"
-                    required
-                    RequireMessage="Veuillez entrer un titre"
-                    InvalidMessage="Le titre comporte un caractère illégal" 
-                    value="${bookmark.Title}"
-                />
-                <label for="Url" class="form-label">Url </label>
-                <input
-                    class="form-control URL"
-                    name="Url"
-                    id="Url"
-                    placeholder="https://www.exemple.com"
-                    required
-                    RequireMessage="Veuillez entrer un Url" 
-                    InvalidMessage="Veuillez entrer une Url valide"
-                    value="${bookmark.Url}" 
-                />
-                <label for="Category" class="form-label">Catégorie </label>
-                <input 
-                    class="form-control Alpha"
-                    name="Category"
-                    id="Category"
-                    placeholder="Catégorie"
-                    required
-                    RequireMessage="Veuillez entrer une catégorie" 
-                    InvalidMessage="La catégorie comporte un caractère illégal"
-                    value="${bookmark.Category}"
-                />
-                
-                <input type="submit" value="Enregistrer" id="saveBookmark" class="btn btn-primary">
-                <input type="button" value="Annuler" id="cancel" class="btn btn-secondary">
-            </form>
-        `);
-
-        // ... Le reste du code de la fonction
-
-        // Même gestion de l'icône en temps réel lorsque l'URL change
-        $('#Url').on("change", () => {
-            const siteUrl = $("#Url").val();
-            
-            const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
-            
-            $("#bookmarkIcon").attr("src", googleFaviconUrl);
-        });
-    } else {
+    if (bookmark !== null)
+        renderBookmarkForm(bookmark);
+    else
         renderError("Favoris introuvable!");
-    }
 }
-
 async function renderDeleteBookmarkForm(id) {
     showWaitingGif();
     $("#createBookmark").hide();
@@ -220,6 +161,11 @@ function renderBookmarkForm(bookmark = null) {
     let create = bookmark == null;
     if (create) bookmark = newBookmark();
     $("#actionTitle").text(create ? "Création" : "Modification");
+
+    // Récupérez l'URL de l'icône du site web avec une meilleure qualité dès le départ
+    let siteUrl = bookmark.Url;
+    let googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+
     $("#content").append(`
         <form class="form" id="bookmarkForm">
             <input type="hidden" name="Id" value="${bookmark.Id}"/>
