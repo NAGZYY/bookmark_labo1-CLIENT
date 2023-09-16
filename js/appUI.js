@@ -66,50 +66,6 @@ async function renderBookmarks() {
     }
 }
 
-function generateCategoryFilters(categories) {
-    const dropdownMenu = $(".dropdown-menu");
-
-    // Supprimer d'abord les anciens éléments de catégorie
-    dropdownMenu.find(".category-filter").remove();
-
-    // Créer un élément pour "Toutes les catégories"
-    const allCategoriesItem = $('<div class="dropdown-item category-filter" data-category="Toutes"><i class="menuIcon fa fa-check-square"></i> Toutes les catégories</div>');
-    dropdownMenu.append(allCategoriesItem);
-    dropdownMenu.append('<div class="dropdown-divider"></div>');
-
-    // Créer des éléments de catégorie pour chaque catégorie unique
-    categories.forEach(category => {
-        const categoryItem = $(`<div class="dropdown-item category-filter" data-category="${category}"><i class="menuIcon fa fa-square"></i> ${category}</div>`);
-        dropdownMenu.append(categoryItem);
-    });
-
-    // Gérer le clic sur les filtres de catégorie
-    $(".category-filter").on("click", function () {
-        const selectedCategory = $(this).data("category");
-        filterBookmarksByCategory(selectedCategory);
-        updateCategoryFilterUI(selectedCategory);
-    });
-}
-
-// Fonction pour filtrer les favoris par catégorie
-function filterBookmarksByCategory(selectedCategory) {
-    if (selectedCategory === "Toutes") {
-        renderBookmarks(); // Afficher tous les favoris si "Toutes les catégories" sont sélectionnées
-    } else {
-        const filteredBookmarks = bookmarks.filter(bookmark => bookmark.Category === selectedCategory);
-        eraseContent();
-        filteredBookmarks.forEach(bookmark => {
-            $("#content").append(renderBookmark(bookmark));
-        });
-        // Attachez les gestionnaires d'événements comme vous le faisiez auparavant
-    }
-}
-
-// Gérer le clic sur "Toutes les catégories"
-$("#allCategories").on("click", function () {
-    filterBookmarksByCategory("Toutes");
-    updateCategoryFilterUI("Toutes");
-});
 
 function showWaitingGif() {
     $("#content").empty();
