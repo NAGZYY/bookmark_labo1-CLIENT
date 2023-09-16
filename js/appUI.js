@@ -67,7 +67,7 @@ async function renderBookmarks() {
             renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
         });
         $(".bookmarkRow").on("click", function (e) { e.preventDefault(); })
-        / Code pour extraire les catégories distinctes de vos favoris
+        // Code pour extraire les catégories distinctes de vos favoris
         const categories = extractDistinctCategories(bookmarks);
         
         // Remplir les options de la liste déroulante
