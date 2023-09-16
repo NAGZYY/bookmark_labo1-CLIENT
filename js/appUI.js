@@ -168,7 +168,7 @@ function renderBookmarkForm(bookmark = null) {
         let googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
     } else {
         let siteUrl = bookmark.Url;
-        let googleFaviconUrl = 'bookmark-logo.svg';
+        let googleFaviconUrl = `https://www.google.com/s2/favicons?domain=https://gelatinous-quartz-quince.glitch.me&sz=64`;
     }
 
     $("#content").append(`
