@@ -169,7 +169,7 @@ function renderBookmarkForm(bookmark = null) {
     $("#content").append(`
         <form class="form" id="bookmarkForm">
             <input type="hidden" name="Id" value="${bookmark.Id}"/>
-            <img id="bookmarkIcon" src="${bookmark.Url ? getFaviconUrl(bookmark.Url) : 'bookmark-logo.svg'}" class="createBookmarkIcon" alt="Icône du favoris">
+            <img id="bookmarkIcon" src="${googleFaviconUrl}" class="createBookmarkIcon" alt="Icône du favoris">
             <label for="Title" class="form-label">Titre </label>
             <input 
                 class="form-control Alpha"
