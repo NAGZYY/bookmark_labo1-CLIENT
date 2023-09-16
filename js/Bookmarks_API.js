@@ -1,5 +1,5 @@
 class Bookmarks_API {
-    static API_URL() { return "https://gelatinous-quartz-quince.glitch.me/api/bookmarks" };
+    static API_URL() { return "https://furry-snowy-wizard.glitch.me/api/bookmarks" };
     static async Get(id = null) {
         return new Promise(resolve => {
             $.ajax({
