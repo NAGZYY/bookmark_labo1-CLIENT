@@ -161,10 +161,15 @@ function renderBookmarkForm(bookmark = null) {
     let create = bookmark == null;
     if (create) bookmark = newBookmark();
     $("#actionTitle").text(create ? "Création" : "Modification");
+
+    // Récupérez l'URL de l'icône du site web avec une meilleure qualité dès le départ
+    let siteUrl = bookmark.Url;
+    let googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
+
     $("#content").append(`
         <form class="form" id="bookmarkForm">
             <input type="hidden" name="Id" value="${bookmark.Id}"/>
-            <img id="bookmarkIcon" src="bookmark-logo.svg" class="createBookmarkIcon" alt="Icône du favoris">
+            <img id="bookmarkIcon" src="${googleFaviconUrl}" class="createBookmarkIcon" alt="Icône du favoris">
             <label for="Title" class="form-label">Titre </label>
             <input 
                 class="form-control Alpha"
@@ -218,22 +223,15 @@ function renderBookmarkForm(bookmark = null) {
     $('#cancel').on("click", function () {
         renderBookmarks();
     });
+    
+    // Mettez à jour l'icône du site en temps réel lorsque l'URL change
     $('#Url').on("change", () => {
-        let site = $("#Url").text
-        $.ajax({
-            url: "https://www.google.com/s2/favicons?domain=" + site + "&sz=256",
-            type: "GET",
-            success: (value) => console.log(value)
-        })
-    })
-    $('#Url').on("change", () => {
-        const siteUrl = $("#Url").val();
-        
-        const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
-        
+        siteUrl = $("#Url").val();
+        googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=64`;
         $("#bookmarkIcon").attr("src", googleFaviconUrl);
     });
 }
+
 
 function getFormData($form) {
     const removeTag = new RegExp("(<[a-zA-Z0-9]+>)|(</[a-zA-Z0-9]+>)", "g");
