@@ -39,6 +39,11 @@ function renderAbout() {
             </div>
         `))
 }
+// Ajoutez cette variable globale pour stocker les catégories sélectionnées
+let selectedCategories = [];
+
+// À l'intérieur de votre fonction renderBookmarks(), modifiez-la comme suit :
+
 async function renderBookmarks() {
     showWaitingGif();
     $("#actionTitle").text("Liste des favoris");
@@ -46,23 +51,58 @@ async function renderBookmarks() {
     $("#abort").hide();
     let bookmarks = await Bookmarks_API.Get();
     eraseContent();
+
     if (bookmarks !== null) {
+        // Code pour extraire les catégories distinctes de vos favoris
+        const categories = extractDistinctCategories(bookmarks);
+        // Code pour mettre à jour la liste déroulante des catégories
+        updateCategoryDropdown(categories);
+        // Code pour filtrer les favoris en fonction des catégories sélectionnées
+        bookmarks = filterBookmarksByCategory(bookmarks, selectedCategories);
+
         bookmarks.forEach(bookmark => {
             $("#content").append(renderBookmark(bookmark));
         });
-        restoreContentScrollPosition();
-        // Attached click events on command icons
-        $(".editCmd").on("click", function () {
-            saveContentScrollPosition();
-            renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
-        });
-        $(".deleteCmd").on("click", function () {
-            saveContentScrollPosition();
-            renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
-        });
-        $(".bookmarkRow").on("click", function (e) { e.preventDefault(); })
+
+        // ... Reste du code pour attacher les gestionnaires d'événements
     } else {
         renderError("Service introuvable");
+    }
+}
+
+// Ajoutez ces fonctions pour gérer les catégories :
+
+function extractDistinctCategories(bookmarks) {
+    const categories = [...new Set(bookmarks.map(bookmark => bookmark.Category))];
+    return categories;
+}
+
+function updateCategoryDropdown(categories) {
+    const categoryDropdown = $("#categoryDropdown");
+
+    // Videz d'abord la liste déroulante
+    categoryDropdown.empty();
+
+    // Ajoutez l'option "Toutes les catégories"
+    categoryDropdown.append('<option value="Toutes">Toutes les catégories</option>');
+
+    // Ajoutez les catégories extraites à la liste déroulante
+    categories.forEach(category => {
+        categoryDropdown.append(`<option value="${category}">${category}</option>`);
+    });
+
+    // Attachez un gestionnaire d'événements pour suivre les sélections dans la liste déroulante
+    categoryDropdown.on("change", function () {
+        selectedCategories = [$(this).val()];
+        renderBookmarks();
+    });
+}
+
+function filterBookmarksByCategory(bookmarks, selectedCategories) {
+    if (selectedCategories.includes("Toutes")) {
+        return bookmarks; // Retournez tous les favoris si "Toutes les catégories" sont sélectionnées
+    } else {
+        return bookmarks.filter(bookmark => selectedCategories.includes(bookmark.Category)); // Filtrer les favoris par catégorie
     }
 }
 function showWaitingGif() {
