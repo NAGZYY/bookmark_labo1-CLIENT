@@ -103,16 +103,15 @@ $(".category-item").on("click", function () {
             categoryItem.removeClass("selected"); // Décochez la catégorie désélectionnée
             categoryIcon.removeClass("fa-check-square").addClass("fa-square"); // Affichez l'icône fa-square
         }
+    }
 
-        // Décochez "Toutes les catégories" si une autre catégorie est cochée
-        if (selectedCategories.length > 0) {
-            $("#allCategories").removeClass("selected");
-            $("#allCategories .menuIcon").removeClass("fa-check-square").addClass("fa-square");
-        } else {
-            // Si aucune catégorie n'est sélectionnée, décochez "Toutes les catégories"
-            $("#allCategories").addClass("selected");
-            $("#allCategories .menuIcon").removeClass("fa-square").addClass("fa-check-square");
-        }
+    // Vérifiez si "Toutes les catégories" doit être décoché
+    if (selectedCategories.length === uniqueCategories.length) {
+        $("#allCategories").addClass("selected");
+        $("#allCategories .menuIcon").removeClass("fa-square").addClass("fa-check-square");
+    } else {
+        $("#allCategories").removeClass("selected");
+        $("#allCategories .menuIcon").removeClass("fa-check-square").addClass("fa-square");
     }
 
     // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
@@ -132,6 +131,7 @@ $(".category-item").on("click", function () {
     });
     restoreContentScrollPosition();
 });
+
 
 
     // Gestionnaire de clic sur "Toutes les catégories"
