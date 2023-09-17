@@ -48,9 +48,16 @@ async function renderBookmarks() {
     eraseContent();
     if (bookmarks !== null) {
         bookmarks.forEach(bookmark => {
-            $("#content").append(renderBookmark(bookmark));
+            const $bookmarkRow = renderBookmark(bookmark);
+            $("#content").append($bookmarkRow);
+
+            $bookmarkRow.on("click", function () {
+                const url = bookmark.Url;
+                window.open(url, "_blank"); // Ouvre l'URL dans un nouvel onglet
+            });
         });
         restoreContentScrollPosition();
+
         // Attached click events on command icons
         $(".editCmd").on("click", function () {
             saveContentScrollPosition();
@@ -60,16 +67,11 @@ async function renderBookmarks() {
             saveContentScrollPosition();
             renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
         });
-        $(".bookmarkRow").on("click", function () {
-            const siteUrl = bookmark.Url;
-            
-            // Redirige vers l'URL du bookmark
-            window.location.href = siteUrl;
-        });        
     } else {
         renderError("Service introuvable");
     }
 }
+
 function showWaitingGif() {
     $("#content").empty();
     $("#content").append($("<div class='waitingGifcontainer'><img class='waitingGif' src='Loading_icon.gif' /></div>'"));
