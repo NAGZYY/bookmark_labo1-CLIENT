@@ -55,7 +55,7 @@ async function renderBookmarks() {
         uniqueCategories.forEach(category => {
             const $categoryItem = $(`
                 <div class="dropdown-item category-item">
-                    <i class="menuIcon fa fa-check-square"></i> ${category}
+                <i class="menuIcon fa fa-check-square hidden"></i> ${category}
                 </div>
             `);
 
@@ -68,20 +68,23 @@ async function renderBookmarks() {
     // Gestionnaire de clics sur les éléments de catégorie
     $(".category-item").on("click", function () {
         const category = $(this).text().trim(); // Récupérez le texte de la catégorie cliquée
-
+    
         // Vérifiez si "Toutes les catégories" est sélectionné
         if (category === "Toutes les catégories") {
             selectedCategories = []; // Réinitialisez les catégories sélectionnées
             $(".category-item").removeClass("selected"); // Décochez toutes les catégories
+            $(".category-item .fa-check-square").addClass("hidden"); // Cachez toutes les icônes
         } else {
             // Vérifiez si la catégorie est déjà sélectionnée
             const index = selectedCategories.indexOf(category);
             if (index === -1) {
                 selectedCategories.push(category); // Ajoutez la catégorie sélectionnée au tableau
                 $(this).addClass("selected"); // Cochez la catégorie sélectionnée
+                $(this).find(".fa-check-square").removeClass("hidden"); // Affichez l'icône
             } else {
                 selectedCategories.splice(index, 1); // Retirez la catégorie désélectionnée du tableau
                 $(this).removeClass("selected"); // Décochez la catégorie désélectionnée
+                $(this).find(".fa-check-square").addClass("hidden"); // Cachez l'icône
             }
         }
 
