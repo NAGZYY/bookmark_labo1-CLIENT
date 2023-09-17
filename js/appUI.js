@@ -85,14 +85,6 @@ function attachBookmarkClickHandlers() {
     });
 }
 
-$("#content").on("click", ".bookmarkRow", function () {
-    const bookmarkId = $(this).attr("bookmark_id");
-    const bookmark = findBookmarkById(bookmarkId);
-    if (bookmark) {
-        window.open(bookmark.Url, "_blank");
-    }
-});
-
 async function renderBookmarks() {
     showWaitingGif();
     $("#actionTitle").text("Liste des favoris");
@@ -198,6 +190,14 @@ if (selectedCategories.length === uniqueCategories.length) {
     attachBookmarkClickHandlers();
 
     restoreContentScrollPosition();
+
+    $("#content").on("click", ".bookmarkRow", function () {
+        const bookmarkId = $(this).attr("bookmark_id");
+        const bookmark = findBookmarkById(bookmarkId);
+        if (bookmark) {
+            window.open(bookmark.Url, "_blank");
+        }
+    });
 });
 
     if (bookmarks !== null) {
