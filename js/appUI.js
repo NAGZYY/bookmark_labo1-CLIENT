@@ -166,8 +166,16 @@ if (selectedCategories.length === uniqueCategories.length) {
         if (selectedCategories.length === 0 || selectedCategories.includes("Toutes les catégories")) {
             return true; // Affichez tous les favoris si "Toutes les catégories" est sélectionné ou si aucune catégorie n'est sélectionnée
         }
+        bookmarks.forEach(bookmark => {
+            const $bookmarkRow = renderBookmark(bookmark);
+            $("#content").append($bookmarkRow);
+
+            $bookmarkRow.on("click", function () {
+                const url = bookmark.Url;
+                window.open(url, "_blank"); // Ouvre l'URL dans un nouvel onglet
+            });
+        });
         return selectedCategories.includes(bookmark.Category);
-        
     });
 
     // Réaffichez la liste des favoris mise à jour
@@ -186,20 +194,9 @@ if (selectedCategories.length === uniqueCategories.length) {
         }
     });
 
-    // Attachez le gestionnaire d'événements click aux favoris
     attachBookmarkClickHandlers();
 
     restoreContentScrollPosition();
-
-    bookmarks.forEach(bookmark => {
-        const $bookmarkRow = renderBookmark(bookmark);
-        $("#content").append($bookmarkRow);
-
-        $bookmarkRow.on("click", function () {
-            const url = bookmark.Url;
-            window.open(url, "_blank"); // Ouvre l'URL dans un nouvel onglet
-        });
-    });
 });
 
     if (bookmarks !== null) {
