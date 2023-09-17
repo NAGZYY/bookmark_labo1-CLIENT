@@ -109,9 +109,9 @@ $(".category-item").on("click", function () {
             $("#allCategories").removeClass("selected");
             $("#allCategories .menuIcon").removeClass("fa-check-square").addClass("fa-square");
         } else {
-            // Si aucune catégorie n'est sélectionnée, cochez "Toutes les catégories"
-            $("#allCategories").addClass("selected");
-            $("#allCategories .menuIcon").removeClass("fa-square").addClass("fa-check-square");
+            // Si aucune catégorie n'est sélectionnée, décochez "Toutes les catégories"
+            $("#allCategories").removeClass("selected");
+            $("#allCategories .menuIcon").removeClass("fa-check-square").addClass("fa-square");
         }
     }
 
@@ -132,6 +132,7 @@ $(".category-item").on("click", function () {
     });
     restoreContentScrollPosition();
 });
+
 
     // Gestionnaire de clic sur "Toutes les catégories"
     $("#allCategories").on("click", function () {
