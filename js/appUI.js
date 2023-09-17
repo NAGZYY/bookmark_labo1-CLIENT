@@ -54,18 +54,52 @@ async function renderBookmarks() {
     if (uniqueCategories.length > 0) {
         uniqueCategories.forEach(category => {
             const $categoryItem = $(`
-                <div class="dropdown-item category-item">
-                    <i class="menuIcon fa fa-check-square"></i> ${category}
-                </div>
+                <div class="dropdown-item category-item">${category}</div>
             `);
 
             // Attachez un gestionnaire d'événements au clic sur l'élément de catégorie ici, si nécessaire
+            $categoryItem.on("click", function () {
+                const categoryText = $(this).text().trim();
+                toggleCategorySelection($(this), categoryText);
+            });
 
             $(".dropdown-divider").before($categoryItem);
         });
     }
 
-    // Gestionnaire de clics sur les éléments de catégorie
+    function toggleCategorySelection($categoryItem, categoryText) {
+        if ($categoryItem.hasClass("selected")) {
+            // La catégorie est déjà sélectionnée, désélectionnez-la
+            $categoryItem.removeClass("selected");
+            // Supprimez la catégorie de la liste des catégories sélectionnées
+            selectedCategories = selectedCategories.filter(cat => cat !== categoryText);
+        } else {
+            // Sélectionnez la catégorie
+            $categoryItem.addClass("selected");
+            // Ajoutez la catégorie à la liste des catégories sélectionnées
+            selectedCategories.push(categoryText);
+        }
+
+        // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
+        const filteredBookmarks = bookmarks.filter(bookmark => {
+            if (selectedCategories.length === 0) {
+                return true;
+            }
+            return selectedCategories.includes(bookmark.Category);
+        });
+
+        // Réaffichez la liste des favoris mise à jour
+        eraseContent();
+        filteredBookmarks.forEach(bookmark => {
+            const $bookmarkRow = renderBookmark(bookmark);
+            $("#content").append($bookmarkRow);
+            // ...
+        });
+        restoreContentScrollPosition();
+    }
+
+
+   // Gestionnaire de clics sur les éléments de catégorie
     $(".category-item").on("click", function () {
         const category = $(this).text().trim();
 
@@ -313,7 +347,7 @@ function renderBookmarkForm(bookmark = null) {
     $('#cancel').on("click", function () {
         renderBookmarks();
     });
-
+    
     // Mettez à jour l'icône du site en temps réel lorsque l'URL change
     $('#Url').on("change", () => {
         siteUrl = $("#Url").val();
