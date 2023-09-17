@@ -148,7 +148,7 @@ async function renderBookmarks() {
             selectedCategories = []; // Réinitialisez les catégories sélectionnées
             $(".category-item").removeClass("selected"); // Décochez toutes les autres catégories
             $(this).addClass("selected");
-            $(this).find("i").addClass("fa-check-square"); // Ajoutez l'icône de coche
+            toggleCategorySelection($(this), "Toutes les catégories");
             // Mettez à jour la liste des favoris pour afficher toutes les catégories
             const filteredBookmarks = bookmarks;
             // Réaffichez la liste des favoris mise à jour
@@ -161,6 +161,7 @@ async function renderBookmarks() {
             restoreContentScrollPosition();
         }
     });
+
 
     if (bookmarks !== null) {
         bookmarks.forEach(bookmark => {
