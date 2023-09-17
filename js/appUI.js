@@ -74,17 +74,6 @@ function renderAbout() {
         `))
 }
 
-function attachBookmarkClickHandlers() {
-    // Gestionnaires de clics sur les favoris pour les ouvrir
-    $("#content").on("click", ".bookmarkRow", function () {
-        const bookmarkId = $(this).attr("bookmark_id");
-        const bookmark = findBookmarkById(bookmarkId);
-        if (bookmark) {
-            window.open(bookmark.Url, "_blank");
-        }
-    });
-}
-
 $(document).on("click", ".bookmarkRow", function () {
     const bookmarkId = $(this).attr("bookmark_id");
     const bookmark = findBookmarkById(bookmarkId);
