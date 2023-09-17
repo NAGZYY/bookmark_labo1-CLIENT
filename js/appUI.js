@@ -191,12 +191,14 @@ if (selectedCategories.length === uniqueCategories.length) {
 
     restoreContentScrollPosition();
 
-    $("#content").on("click", ".bookmarkRow", function () {
-        const bookmarkId = $(this).attr("bookmark_id");
-        const bookmark = findBookmarkById(bookmarkId);
-        if (bookmark) {
-            window.open(bookmark.Url, "_blank");
-        }
+    bookmarks.forEach(bookmark => {
+        const $bookmarkRow = renderBookmark(bookmark);
+        $("#content").append($bookmarkRow);
+
+        $bookmarkRow.on("click", function () {
+            const url = bookmark.Url;
+            window.open(url, "_blank"); // Ouvre l'URL dans un nouvel onglet
+        });
     });
 });
 
@@ -205,10 +207,10 @@ if (selectedCategories.length === uniqueCategories.length) {
             const $bookmarkRow = renderBookmark(bookmark);
             $("#content").append($bookmarkRow);
 
-            //$bookmarkRow.on("click", function () {
-            //    const url = bookmark.Url;
-            //    window.open(url, "_blank"); // Ouvre l'URL dans un nouvel onglet
-            //});
+            $bookmarkRow.on("click", function () {
+                const url = bookmark.Url;
+                window.open(url, "_blank"); // Ouvre l'URL dans un nouvel onglet
+            });
         });
         restoreContentScrollPosition();
 
