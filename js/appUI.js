@@ -7,7 +7,6 @@ Init_UI();
 
 function Init_UI() {
     renderBookmarks();
-    categoriesRendered = true;
     $('#createBookmark').on("click", async function () {
         saveContentScrollPosition();
         renderCreateBookmarkForm();
@@ -75,6 +74,7 @@ async function renderBookmarks() {
                 $(".dropdown-divider").before($categoryItem);
             });
         }
+        categoriesRendered = true;
     }
 
     // Gestionnaire de clics sur les éléments de catégorie
