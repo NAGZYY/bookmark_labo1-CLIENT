@@ -88,8 +88,6 @@ $(".category-item").on("click", function () {
         if (!categoryItem.hasClass("selected")) {
             // Si "Toutes les catégories" n'est pas déjà sélectionné, sélectionnez-le
             selectedCategories = uniqueCategories.slice(); // Sélectionnez toutes les catégories
-        } else {
-            selectedCategories = []; // Décochez "Toutes les catégories"
         }
 
         // Mettez à jour l'affichage des catégories
