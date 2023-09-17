@@ -23,6 +23,17 @@ function Init_UI() {
     });
 }
 
+function attachBookmarkClickHandlers() {
+    // Gestionnaire de clics sur les favoris pour les ouvrir
+    $("#content").on("click", ".bookmarkRow", function () {
+        const bookmarkId = $(this).attr("bookmark_id");
+        const bookmark = findBookmarkById(bookmarkId);
+        if (bookmark) {
+            window.open(bookmark.Url, "_blank");
+        }
+    });
+}
+
 function attachEventHandlers() {
     // Gestionnaire de clics sur les éléments de catégorie
     $(".category-item").on("click", function () {
@@ -184,6 +195,8 @@ if (selectedCategories.length === uniqueCategories.length) {
         const $bookmarkRow = renderBookmark(bookmark);
         $("#content").append($bookmarkRow);
     });
+
+    attachBookmarkClickHandlers();
 
     // Restaurez les filtres précédemment sélectionnés
     savedSelectedCategories.forEach(category => {
