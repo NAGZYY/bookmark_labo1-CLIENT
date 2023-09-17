@@ -65,7 +65,7 @@ async function renderBookmarks() {
             uniqueCategories.forEach(category => {
                 const $categoryItem = $(`
                     <div class="dropdown-item category-item">
-                        <i class="menuIcon fa fa-square"></i> ${category}
+                        <i class="menuIcon fa fa-check-square"></i> ${category}
                     </div>
                 `);
 
