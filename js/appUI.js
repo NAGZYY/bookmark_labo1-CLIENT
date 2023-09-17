@@ -67,28 +67,33 @@ async function renderBookmarks() {
 
     // Gestionnaire de clics sur les éléments de catégorie
     $(".category-item").on("click", function () {
-        const category = $(this).text().trim(); // Récupérez le texte de la catégorie cliquée
+        const category = $(this).text().trim();
 
-        // Vérifiez si "Toutes les catégories" est sélectionné
+        // Vérifiez si "Toutes les catégories" est coché
         if (category === "Toutes les catégories") {
             selectedCategories = []; // Réinitialisez les catégories sélectionnées
-            $(".category-item").removeClass("selected"); // Décochez toutes les catégories
+            $(".category-item").removeClass("selected"); // Décochez toutes les autres catégories
+            $("#allCategoriesBtn i").removeClass("fa-check-square"); // Retirez l'icône de coche
         } else {
             // Vérifiez si la catégorie est déjà sélectionnée
             const index = selectedCategories.indexOf(category);
             if (index === -1) {
-                selectedCategories.push(category); // Ajoutez la catégorie sélectionnée au tableau
-                $(this).addClass("selected"); // Cochez la catégorie sélectionnée
+                selectedCategories.push(category);
+                $(this).addClass("selected");
+                // Ajoutez l'icône de coche lorsque la catégorie est sélectionnée
+                $(this).find("i").addClass("fa-check-square");
             } else {
-                selectedCategories.splice(index, 1); // Retirez la catégorie désélectionnée du tableau
-                $(this).removeClass("selected"); // Décochez la catégorie désélectionnée
+                selectedCategories.splice(index, 1);
+                $(this).removeClass("selected");
+                // Retirez l'icône de coche lorsque la catégorie est désélectionnée
+                $(this).find("i").removeClass("fa-check-square");
             }
         }
 
         // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
         const filteredBookmarks = bookmarks.filter(bookmark => {
             if (selectedCategories.length === 0) {
-                return true; // Affichez tous les favoris si aucune catégorie n'est sélectionnée
+                return true;
             }
             return selectedCategories.includes(bookmark.Category);
         });
@@ -99,9 +104,28 @@ async function renderBookmarks() {
             const $bookmarkRow = renderBookmark(bookmark);
             $("#content").append($bookmarkRow);
             // ...
-
         });
         restoreContentScrollPosition();
+    });
+
+    // Gestionnaire de clic sur le bouton "Toutes les catégories"
+    $("#allCategoriesBtn").on("click", function () {
+        if (!$(this).hasClass("selected")) {
+            selectedCategories = []; // Réinitialisez les catégories sélectionnées
+            $(".category-item").removeClass("selected"); // Décochez toutes les autres catégories
+            $(this).addClass("selected");
+            $(this).find("i").addClass("fa-check-square"); // Ajoutez l'icône de coche
+            // Mettez à jour la liste des favoris pour afficher toutes les catégories
+            const filteredBookmarks = bookmarks;
+            // Réaffichez la liste des favoris mise à jour
+            eraseContent();
+            filteredBookmarks.forEach(bookmark => {
+                const $bookmarkRow = renderBookmark(bookmark);
+                $("#content").append($bookmarkRow);
+                // ...
+            });
+            restoreContentScrollPosition();
+        }
     });
 
     if (bookmarks !== null) {
@@ -289,7 +313,7 @@ function renderBookmarkForm(bookmark = null) {
     $('#cancel').on("click", function () {
         renderBookmarks();
     });
-    
+
     // Mettez à jour l'icône du site en temps réel lorsque l'URL change
     $('#Url').on("change", () => {
         siteUrl = $("#Url").val();
