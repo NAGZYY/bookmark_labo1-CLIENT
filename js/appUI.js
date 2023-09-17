@@ -15,24 +15,6 @@ function Init_UI() {
     $('#aboutCmd').on("click", function () {
         renderAbout();
     });
-
-    // Supprimez complètement l'élément "Toutes les catégories" de la liste des catégories
-$(".category-item:contains('Toutes les catégories')").remove();
-
-// Ajoutez un bouton distinct pour "Toutes les catégories"
-const $allCategoriesButton = $(`
-    <div id="allCategoriesButton" class="btn btn-primary">
-        Toutes les catégories
-    </div>
-`);
-$("#content").prepend($allCategoriesButton);
-
-// Gestionnaire de clic sur le bouton "Toutes les catégories"
-$allCategoriesButton.on("click", function () {
-    selectedCategories = uniqueCategories.slice(); // Sélectionnez toutes les catégories
-    renderBookmarks(); // Réaffichez la liste des favoris
-});
-
 }
 
 function renderAbout() {
@@ -90,25 +72,46 @@ async function renderBookmarks() {
         });
     }
 
-    // Supprimez l'élément "Toutes les catégories" de la liste des catégories
-$("#allCategories").remove();
-
-// Gestionnaire de clics sur les éléments de catégorie
+    // Gestionnaire de clics sur les éléments de catégorie
 $(".category-item").on("click", function () {
     const categoryItem = $(this);
     const category = categoryItem.text().trim(); // Récupérez le texte de la catégorie cliquée
     const categoryIcon = categoryItem.find(".menuIcon");
 
-    // Vérifiez si la catégorie est déjà sélectionnée
-    const index = selectedCategories.indexOf(category);
-    if (index === -1) {
-        selectedCategories.push(category); // Ajoutez la catégorie sélectionnée au tableau
-        categoryItem.addClass("selected"); // Cochez la catégorie sélectionnée
-        categoryIcon.removeClass("fa-square").addClass("fa-check-square"); // Affichez l'icône fa-check-square
+    // Vérifiez si "Toutes les catégories" est sélectionné
+    if (category === "Toutes les catégories") {
+        if (!categoryItem.hasClass("selected")) {
+            // Si "Toutes les catégories" n'est pas déjà sélectionné, sélectionnez-le
+            selectedCategories = uniqueCategories.slice(); // Sélectionnez toutes les catégories
+            $(".category-item").addClass("selected"); // Cochez toutes les catégories
+            $(".category-item .menuIcon").removeClass("fa-square").addClass("fa-check-square"); // Affichez l'icône fa-check-square pour toutes les catégories
+        } else {
+            // Si "Toutes les catégories" est déjà sélectionné, décochez-le
+            selectedCategories = [];
+            $(".category-item").removeClass("selected");
+            $(".category-item .menuIcon").removeClass("fa-check-square").addClass("fa-square");
+        }
     } else {
-        selectedCategories.splice(index, 1); // Retirez la catégorie désélectionnée du tableau
-        categoryItem.removeClass("selected"); // Décochez la catégorie désélectionnée
-        categoryIcon.removeClass("fa-check-square").addClass("fa-square"); // Affichez l'icône fa-square
+        // Vérifiez si la catégorie est déjà sélectionnée
+        const index = selectedCategories.indexOf(category);
+        if (index === -1) {
+            selectedCategories.push(category); // Ajoutez la catégorie sélectionnée au tableau
+            categoryItem.addClass("selected"); // Cochez la catégorie sélectionnée
+            categoryIcon.removeClass("fa-square").addClass("fa-check-square"); // Affichez l'icône fa-check-square
+        } else {
+            selectedCategories.splice(index, 1); // Retirez la catégorie désélectionnée du tableau
+            categoryItem.removeClass("selected"); // Décochez la catégorie désélectionnée
+            categoryIcon.removeClass("fa-check-square").addClass("fa-square"); // Affichez l'icône fa-square
+        }
+    }
+
+    // Vérifiez si "Toutes les catégories" doit être décoché
+    if (selectedCategories.length === uniqueCategories.length) {
+        $("#allCategories").addClass("selected");
+        $("#allCategories .menuIcon").removeClass("fa-square").addClass("fa-check-square");
+    } else {
+        $("#allCategories").removeClass("selected");
+        $("#allCategories .menuIcon").removeClass("fa-check-square").addClass("fa-square");
     }
 
     // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
