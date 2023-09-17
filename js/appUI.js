@@ -10,6 +10,7 @@ function Init_UI() {
     attachEventHandlers();
 
     renderBookmarks();
+    updateFilteredBookmarks();
     $('#createBookmark').on("click", async function () {
         saveContentScrollPosition();
         renderCreateBookmarkForm();
@@ -80,6 +81,29 @@ $(document).on("click", ".bookmarkRow", function () {
     }
 });
 
+function updateFilteredBookmarks() {
+    // Code de filtrage en fonction des catégories sélectionnées
+    const filteredBookmarks = bookmarks.filter(bookmark => {
+        if (selectedCategories.length === 0 || selectedCategories.includes("Toutes les catégories")) {
+            return true; // Affichez tous les favoris si "Toutes les catégories" est sélectionné ou si aucune catégorie n'est sélectionnée
+        }
+        return selectedCategories.includes(bookmark.Category);
+    });
+
+    // Réaffichez la liste des favoris mise à jour
+    eraseContent();
+    filteredBookmarks.forEach(bookmark => {
+        const $bookmarkRow = renderBookmark(bookmark);
+        $("#content").append($bookmarkRow);
+
+        // Attachez le gestionnaire d'événements click ici, après l'ajout de l'élément à la liste
+        $bookmarkRow.on("click", function () {
+            const url = bookmark.Url;
+            window.open(url, "_blank");
+        });
+    });
+}
+
 async function renderBookmarks() {
     showWaitingGif();
     $("#actionTitle").text("Liste des favoris");
@@ -87,6 +111,8 @@ async function renderBookmarks() {
     $("#abort").hide();
     let bookmarks = await Bookmarks_API.Get();
     eraseContent();
+
+    updateFilteredBookmarks();
 
     const categories = bookmarks.map(bookmark => bookmark.Category);
     const uniqueCategories = [...new Set(categories)];
@@ -206,7 +232,6 @@ if (selectedCategories.length === uniqueCategories.length) {
         $(".editCmd").on("click", function () {
             saveContentScrollPosition();
             renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
-            categoriesRendered = false;
         });
         $(".deleteCmd").on("click", function () {
             saveContentScrollPosition();
@@ -286,8 +311,10 @@ async function renderDeleteBookmarkForm(id) {
         $('#deleteBookmark').on("click", async function () {
             showWaitingGif();
             let result = await Bookmarks_API.Delete(bookmark.Id);
-            if (result)
+            if (result) {
                 renderBookmarks();
+                updateFilteredBookmarks();
+            }
             else
                 renderError("Une erreur est survenue!");
         });
@@ -368,8 +395,10 @@ function renderBookmarkForm(bookmark = null) {
         bookmark.Id = parseInt(bookmark.Id);
         showWaitingGif();
         let result = await Bookmarks_API.Save(bookmark, create);
-        if (result)
+        if (result) {
             renderBookmarks();
+            updateFilteredBookmarks();
+        }
         else
             renderError("Une erreur est survenue!");
     });
