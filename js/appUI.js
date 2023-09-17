@@ -10,7 +10,7 @@ function Init_UI() {
     attachEventHandlers();
 
     renderBookmarks();
-    
+
     $('#createBookmark').on("click", async function () {
         saveContentScrollPosition();
         renderCreateBookmarkForm();
@@ -111,8 +111,6 @@ async function renderBookmarks() {
     $("#abort").hide();
     let bookmarks = await Bookmarks_API.Get();
     eraseContent();
-
-    updateFilteredBookmarks();
 
     const categories = bookmarks.map(bookmark => bookmark.Category);
     const uniqueCategories = [...new Set(categories)];
