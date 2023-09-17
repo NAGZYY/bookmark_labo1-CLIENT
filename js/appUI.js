@@ -46,6 +46,24 @@ async function renderBookmarks() {
     $("#abort").hide();
     let bookmarks = await Bookmarks_API.Get();
     eraseContent();
+    
+    const categories = bookmarks.map(bookmark => bookmark.Category);
+    const uniqueCategories = [...new Set(categories)];
+
+    if (uniqueCategories.length > 0) {
+        uniqueCategories.forEach(category => {
+            const $categoryItem = $(`
+                <div class="dropdown-item category-item">
+                    <i class="menuIcon fa fa-check-square"></i> ${category}
+                </div>
+            `);
+
+            // Attachez un gestionnaire d'événements au clic sur l'élément de catégorie ici, si nécessaire
+
+            $(".dropdown-divider").before($categoryItem);
+        });
+    }
+
     if (bookmarks !== null) {
         bookmarks.forEach(bookmark => {
             const $bookmarkRow = renderBookmark(bookmark);
@@ -271,27 +289,3 @@ function renderBookmark(bookmark) {
     </div>           
     `);
 }
-
-async function addCategoriesToDropdown() {
-   
-    let bookmarks = await Bookmarks_API.Get();
-    const categories = bookmarks.map(bookmark => bookmark.Category);
-    const uniqueCategories = [...new Set(categories)];
-
-    if (uniqueCategories.length > 0) {
-        uniqueCategories.forEach(category => {
-            const $categoryItem = $(`
-                <div class="dropdown-item category-item">
-                    <i class="menuIcon fa fa-folder mx-2"></i> ${category}
-                </div>
-            `);
-
-            // Attachez un gestionnaire d'événements au clic sur l'élément de catégorie ici, si nécessaire
-
-            $(".dropdown-divider").before($categoryItem);
-        });
-    }
-}
-
-// Appelez cette fonction pour ajouter les catégories à la liste déroulante
-addCategoriesToDropdown();
