@@ -272,3 +272,23 @@ function renderBookmark(bookmark) {
     `);
 }
 
+async function addCategoriesToDropdown() {
+    const categories = await getCategoriesFromAPI(); // Remplacez ceci par une fonction pour obtenir les catégories depuis votre API
+
+    if (categories.length > 0) {
+        categories.forEach(category => {
+            const $categoryItem = $(`
+                <div class="dropdown-item category-item">
+                    <i class="menuIcon fa fa-folder mx-2"></i> ${category}
+                </div>
+            `);
+
+            // Attachez un gestionnaire d'événements au clic sur l'élément de catégorie ici, si nécessaire
+
+            $(".dropdown-divider").before($categoryItem);
+        });
+    }
+}
+
+// Appelez cette fonction pour ajouter les catégories à la liste déroulante
+addCategoriesToDropdown();
