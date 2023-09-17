@@ -10,7 +10,7 @@ function Init_UI() {
     attachEventHandlers();
 
     renderBookmarks();
-    updateFilteredBookmarks();
+    
     $('#createBookmark').on("click", async function () {
         saveContentScrollPosition();
         renderCreateBookmarkForm();
