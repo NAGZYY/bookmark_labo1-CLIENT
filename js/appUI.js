@@ -132,45 +132,6 @@ $(".category-item").on("click", function () {
     restoreContentScrollPosition();
 });
 
-
-
-    // Gestionnaire de clic sur "Toutes les catégories"
-    $("#allCategories").on("click", function () {
-        const allCategoriesItem = $(this);
-        const allCategoriesIcon = allCategoriesItem.find(".menuIcon");
-
-        // Si "Toutes les catégories" est déjà sélectionné, désélectionnez-le et décochez toutes les catégories
-        if (allCategoriesItem.hasClass("selected")) {
-            selectedCategories = [];
-            $(".category-item").removeClass("selected");
-            $(".category-item .menuIcon").removeClass("fa-check-square").addClass("fa-square");
-            allCategoriesIcon.removeClass("fa-check-square").addClass("fa-square");
-        } else {
-            // Sélectionnez "Toutes les catégories" et cochez toutes les catégories
-            selectedCategories = uniqueCategories.slice();
-            $(".category-item").addClass("selected");
-            $(".category-item .menuIcon").removeClass("fa-square").addClass("fa-check-square");
-            allCategoriesIcon.removeClass("fa-square").addClass("fa-check-square");
-        }
-
-        // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
-        const filteredBookmarks = bookmarks.filter(bookmark => {
-            if (selectedCategories.length === 0) {
-                return true; // Affichez tous les favoris si aucune catégorie n'est sélectionnée
-            }
-            return selectedCategories.includes(bookmark.Category);
-        });
-
-        // Réaffichez la liste des favoris mise à jour
-        eraseContent();
-        filteredBookmarks.forEach(bookmark => {
-            const $bookmarkRow = renderBookmark(bookmark);
-            $("#content").append($bookmarkRow);
-            // ...
-        });
-        restoreContentScrollPosition();
-    });
-
     if (bookmarks !== null) {
         bookmarks.forEach(bookmark => {
             const $bookmarkRow = renderBookmark(bookmark);
