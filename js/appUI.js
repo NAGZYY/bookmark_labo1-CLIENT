@@ -23,17 +23,6 @@ function Init_UI() {
     });
 }
 
-function attachBookmarkClickHandlers() {
-    // Gestionnaire de clics sur les favoris pour les ouvrir
-    $("#content").on("click", ".bookmarkRow", function () {
-        const bookmarkId = $(this).attr("bookmark_id");
-        const bookmark = findBookmarkById(bookmarkId);
-        if (bookmark) {
-            window.open(bookmark.Url, "_blank");
-        }
-    });
-}
-
 function attachEventHandlers() {
     // Gestionnaire de clics sur les éléments de catégorie
     $(".category-item").on("click", function () {
@@ -95,6 +84,14 @@ function attachBookmarkClickHandlers() {
         }
     });
 }
+
+$(document).on("click", ".bookmarkRow", function () {
+    const bookmarkId = $(this).attr("bookmark_id");
+    const bookmark = findBookmarkById(bookmarkId);
+    if (bookmark) {
+        window.open(bookmark.Url, "_blank");
+    }
+});
 
 async function renderBookmarks() {
     showWaitingGif();
@@ -196,8 +193,6 @@ if (selectedCategories.length === uniqueCategories.length) {
         $("#content").append($bookmarkRow);
     });
 
-    attachBookmarkClickHandlers();
-
     // Restaurez les filtres précédemment sélectionnés
     savedSelectedCategories.forEach(category => {
         const categoryItem = $(`.category-item:contains('${category}')`);
@@ -206,8 +201,6 @@ if (selectedCategories.length === uniqueCategories.length) {
             categoryItem.find(".menuIcon").removeClass("fa-square").addClass("fa-check-square");
         }
     });
-
-    attachBookmarkClickHandlers();
 
     restoreContentScrollPosition();
 });
