@@ -1,6 +1,7 @@
 //<span class="cmdIcon fa-solid fa-ellipsis-vertical"></span>
 let contentScrollPosition = 0;
 let selectedCategories = [];
+let selectedCategoriesBeforeAbort = [];
 let categoriesRendered = false;
 
 Init_UI();
@@ -12,8 +13,10 @@ function Init_UI() {
         renderCreateBookmarkForm();
     });
     $('#abort').on("click", async function () {
+        selectedCategoriesBeforeAbort = [...selectedCategories]; // Enregistrez l'état actuel des filtres
         renderBookmarks();
     });
+    
     $('#aboutCmd').on("click", function () {
         renderAbout();
     });
@@ -120,10 +123,10 @@ if (selectedCategories.length === uniqueCategories.length) {
 
     // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
     const filteredBookmarks = bookmarks.filter(bookmark => {
-        if (selectedCategories.length === 0) {
-            return false; // Affichez tous les favoris si aucune catégorie n'est sélectionnée
+        if (selectedCategoriesBeforeAbort.length === 0) {
+            return false; // Affichez tous les favoris si aucune catégorie n'était sélectionnée avant "Annuler"
         }
-        return selectedCategories.includes(bookmark.Category);
+        return selectedCategoriesBeforeAbort.includes(bookmark.Category);
     });
 
     // Réaffichez la liste des favoris mise à jour
