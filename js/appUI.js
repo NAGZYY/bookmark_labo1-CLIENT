@@ -7,6 +7,7 @@ Init_UI();
 
 function Init_UI() {
     renderBookmarks();
+    categoriesRendered = true;
     $('#createBookmark').on("click", async function () {
         saveContentScrollPosition();
         renderCreateBookmarkForm();
@@ -17,38 +18,6 @@ function Init_UI() {
     $('#aboutCmd').on("click", function () {
         renderAbout();
     });
-}
-
-// Gestionnaire de clic sur le bouton "Annuler"
-$("#abort").on("click", function () {
-    renderBookmarks();
-    if (!categoriesRendered) {
-        renderCategories(uniqueCategories);
-        categoriesRendered = true; // Marquez que les catégories ont été affichées
-    }
-});
-
-function renderCategories(categories) {
-    if (categories.length > 0) {
-        const $allCategories = $(`
-            <div class="dropdown-item category-item selected">
-                Toutes les catégories
-            </div>
-        `);
-        $(".dropdown-divider").before($allCategories);
-
-        categories.forEach(category => {
-            const $categoryItem = $(`
-                <div class="dropdown-item category-item">
-                    <i class="menuIcon fa fa-square"></i> ${category}
-                </div>
-            `);
-
-            // Attachez un gestionnaire d'événements au clic sur l'élément de catégorie ici, si nécessaire
-
-            $(".dropdown-divider").before($categoryItem);
-        });
-    }
 }
 
 function renderAbout() {
@@ -85,25 +54,27 @@ async function renderBookmarks() {
     const categories = bookmarks.map(bookmark => bookmark.Category);
     const uniqueCategories = [...new Set(categories)];
 
-    if (uniqueCategories.length > 0) {
-        const $allCategories = $(`
-            <div class="dropdown-item category-item selected">
-                 Toutes les catégories
-            </div>
-        `);
-        $(".dropdown-divider").before($allCategories);
-
-        uniqueCategories.forEach(category => {
-            const $categoryItem = $(`
-                <div class="dropdown-item category-item">
-                    <i class="menuIcon fa fa-square"></i> ${category}
+    if (categoriesRendered != true) {
+        if (uniqueCategories.length > 0) {
+            const $allCategories = $(`
+                <div class="dropdown-item category-item selected">
+                    Toutes les catégories
                 </div>
             `);
+            $(".dropdown-divider").before($allCategories);
 
-            // Attachez un gestionnaire d'événements au clic sur l'élément de catégorie ici, si nécessaire
+            uniqueCategories.forEach(category => {
+                const $categoryItem = $(`
+                    <div class="dropdown-item category-item">
+                        <i class="menuIcon fa fa-square"></i> ${category}
+                    </div>
+                `);
 
-            $(".dropdown-divider").before($categoryItem);
-        });
+                // Attachez un gestionnaire d'événements au clic sur l'élément de catégorie ici, si nécessaire
+
+                $(".dropdown-divider").before($categoryItem);
+            });
+        }
     }
 
     // Gestionnaire de clics sur les éléments de catégorie
