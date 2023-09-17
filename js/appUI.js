@@ -1,6 +1,7 @@
 //<span class="cmdIcon fa-solid fa-ellipsis-vertical"></span>
 let contentScrollPosition = 0;
 let selectedCategories = [];
+let categoriesRendered = false;
 Init_UI();
 
 function Init_UI() {
@@ -74,42 +75,11 @@ async function renderBookmarks() {
 
     // Gestionnaire de clics sur les éléments de catégorie
 $(".category-item").on("click", function () {
-    const categoryItem = $(this);
-    const category = categoryItem.text().trim(); // Récupérez le texte de la catégorie cliquée
-    const categoryIcon = categoryItem.find(".menuIcon");
-
-    // Vérifiez si "Toutes les catégories" est sélectionné
-    if (category === "Toutes les catégories") {
-        if (!categoryItem.hasClass("selected")) {
-            // Si "Toutes les catégories" n'est pas déjà sélectionné, sélectionnez-le
-            selectedCategories = uniqueCategories.slice(); // Sélectionnez toutes les catégories
-        } else {
-            selectedCategories = []; // Décochez "Toutes les catégories"
-        }
-
-        // Mettez à jour l'affichage des catégories
-        $(".category-item").toggleClass("selected", !categoryItem.hasClass("selected"));
-        $(".category-item .menuIcon").toggleClass("fa-check-square fa-square", !categoryItem.hasClass("selected"));
-    } else {
-        // Vérifiez si la catégorie est déjà sélectionnée
-        const index = selectedCategories.indexOf(category);
-        if (index === -1) {
-            selectedCategories.push(category); // Ajoutez la catégorie sélectionnée au tableau
-        } else {
-            selectedCategories.splice(index, 1); // Retirez la catégorie désélectionnée du tableau
-        }
-
-        // Mettez à jour l'affichage de la catégorie
-        categoryItem.toggleClass("selected");
-        categoryIcon.toggleClass("fa-check-square fa-square");
-    }
+    // ...
 
     // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
     const filteredBookmarks = bookmarks.filter(bookmark => {
-        if (selectedCategories.length === 0) {
-            return true; // Affichez tous les favoris si aucune catégorie n'est sélectionnée
-        }
-        return selectedCategories.includes(bookmark.Category);
+        // ...
     });
 
     // Réaffichez la liste des favoris mise à jour
@@ -121,6 +91,38 @@ $(".category-item").on("click", function () {
     });
     restoreContentScrollPosition();
 });
+
+// Gestionnaire de clic sur le bouton "Annuler"
+$("#abort").on("click", function () {
+    renderBookmarks();
+    if (!categoriesRendered) {
+        renderCategories(uniqueCategories);
+        categoriesRendered = true; // Marquez que les catégories ont été affichées
+    }
+});
+
+function renderCategories(categories) {
+    if (categories.length > 0) {
+        const $allCategories = $(`
+            <div class="dropdown-item category-item selected">
+                Toutes les catégories
+            </div>
+        `);
+        $(".dropdown-divider").before($allCategories);
+
+        categories.forEach(category => {
+            const $categoryItem = $(`
+                <div class="dropdown-item category-item">
+                    <i class="menuIcon fa fa-square"></i> ${category}
+                </div>
+            `);
+
+            // Attachez un gestionnaire d'événements au clic sur l'élément de catégorie ici, si nécessaire
+
+            $(".dropdown-divider").before($categoryItem);
+        });
+    }
+}
 
     if (bookmarks !== null) {
         bookmarks.forEach(bookmark => {
