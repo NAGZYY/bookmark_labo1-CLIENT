@@ -121,7 +121,7 @@ if (selectedCategories.length === uniqueCategories.length) {
     // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
     const filteredBookmarks = bookmarks.filter(bookmark => {
         if (selectedCategories.length === 0) {
-            return true; // Affichez tous les favoris si aucune catégorie n'est sélectionnée
+            return false; // Affichez tous les favoris si aucune catégorie n'est sélectionnée
         }
         return selectedCategories.includes(bookmark.Category);
     });
