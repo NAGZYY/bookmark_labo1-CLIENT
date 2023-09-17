@@ -15,6 +15,24 @@ function Init_UI() {
     $('#aboutCmd').on("click", function () {
         renderAbout();
     });
+
+    // Supprimez complètement l'élément "Toutes les catégories" de la liste des catégories
+$(".category-item:contains('Toutes les catégories')").remove();
+
+// Ajoutez un bouton distinct pour "Toutes les catégories"
+const $allCategoriesButton = $(`
+    <div id="allCategoriesButton" class="btn btn-primary">
+        Toutes les catégories
+    </div>
+`);
+$("#content").prepend($allCategoriesButton);
+
+// Gestionnaire de clic sur le bouton "Toutes les catégories"
+$allCategoriesButton.on("click", function () {
+    selectedCategories = uniqueCategories.slice(); // Sélectionnez toutes les catégories
+    renderBookmarks(); // Réaffichez la liste des favoris
+});
+
 }
 
 function renderAbout() {
