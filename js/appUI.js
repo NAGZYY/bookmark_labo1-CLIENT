@@ -51,19 +51,41 @@ async function renderBookmarks() {
     const categories = bookmarks.map(bookmark => bookmark.Category);
     const uniqueCategories = [...new Set(categories)];
 
+    // Créez un élément "Toutes les catégories"
+    const $allCategoriesItem = $(`
+        <div class="dropdown-item category-item">
+            <i class="menuIcon fa fa-check-square"></i> Toutes les catégories
+        </div>
+    `);
+
+    // Attachez un gestionnaire d'événements au clic sur l'élément "Toutes les catégories"
+    $allCategoriesItem.on("click", function () {
+        selectedCategories = []; // Réinitialisez les catégories sélectionnées
+        $(".category-item").removeClass("selected"); // Décochez toutes les autres catégories
+        $(this).addClass("selected");
+        renderFilteredBookmarks(bookmarks); // Affichez tous les favoris
+    });
+
+    $(".dropdown-divider").before($allCategoriesItem);
+
     if (uniqueCategories.length > 0) {
         uniqueCategories.forEach(category => {
             const $categoryItem = $(`
-                <div class="dropdown-item category-item">
-                    <i class="menuIcon fa fa-check-square"></i> ${category}
-                </div>
+                <div class="dropdown-item category-item">${category}</div>
             `);
 
-            // Attachez un gestionnaire d'événements au clic sur l'élément de catégorie ici, si nécessaire
+            // Attachez un gestionnaire d'événements au clic sur l'élément de catégorie ici
+            $categoryItem.on("click", function () {
+                const categoryText = $(this).text();
+                toggleCategorySelection($(this), categoryText, bookmarks);
+            });
 
             $(".dropdown-divider").before($categoryItem);
         });
     }
+
+    // Affichez les favoris en fonction des catégories sélectionnées
+    renderFilteredBookmarks(bookmarks);
 
     // Gestionnaire de clics sur les éléments de catégorie
     $(".category-item").on("click", function () {
