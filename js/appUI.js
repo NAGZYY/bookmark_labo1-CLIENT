@@ -7,7 +7,6 @@ let categoriesRendered = false;
 Init_UI();
 
 function Init_UI() {
-    // Attachez les gestionnaires d'événements click une seule fois lors de l'initialisation
     attachEventHandlers();
 
     renderBookmarks();
@@ -24,7 +23,6 @@ function Init_UI() {
 }
 
 function attachEventHandlers() {
-    // Gestionnaire de clics sur les éléments de catégorie
     $(".category-item").on("click", function () {
         // Code de gestion des filtres...
     });
@@ -108,8 +106,6 @@ async function renderBookmarks() {
                         <i class="menuIcon fa fa-square"></i> ${category}
                     </div>
                 `);
-
-                // Attachez un gestionnaire d'événements au clic sur l'élément de catégorie ici, si nécessaire
 
                 $(".dropdown-divider").before($categoryItem);
             });
@@ -210,6 +206,7 @@ if (selectedCategories.length === uniqueCategories.length) {
         $(".editCmd").on("click", function () {
             saveContentScrollPosition();
             renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
+            categoriesRendered = false;
         });
         $(".deleteCmd").on("click", function () {
             saveContentScrollPosition();
