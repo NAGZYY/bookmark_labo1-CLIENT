@@ -81,28 +81,6 @@ $(document).on("click", ".bookmarkRow", function () {
     }
 });
 
-function updateFilteredBookmarks() {
-    // Code de filtrage en fonction des catégories sélectionnées
-    const filteredBookmarks = bookmarks.filter(bookmark => {
-        if (selectedCategories.length === 0 || selectedCategories.includes("Toutes les catégories")) {
-            return true; // Affichez tous les favoris si "Toutes les catégories" est sélectionné ou si aucune catégorie n'est sélectionnée
-        }
-        return selectedCategories.includes(bookmark.Category);
-    });
-
-    // Réaffichez la liste des favoris mise à jour
-    eraseContent();
-    filteredBookmarks.forEach(bookmark => {
-        const $bookmarkRow = renderBookmark(bookmark);
-        $("#content").append($bookmarkRow);
-
-        // Attachez le gestionnaire d'événements click ici, après l'ajout de l'élément à la liste
-        $bookmarkRow.on("click", function () {
-            const url = bookmark.Url;
-            window.open(url, "_blank");
-        });
-    });
-}
 
 async function renderBookmarks() {
     showWaitingGif();
@@ -135,8 +113,6 @@ async function renderBookmarks() {
             });
         }
         categoriesRendered = true;
-    } else {
-        updateFilteredBookmarks();
     }
 
     // Gestionnaire de clics sur les éléments de catégorie
