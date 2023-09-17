@@ -52,6 +52,13 @@ async function renderBookmarks() {
     const uniqueCategories = [...new Set(categories)];
 
     if (uniqueCategories.length > 0) {
+        const $allCategories = $(`
+            <div class="dropdown-item category-item selected">
+                <i class="menuIcon fa fa-check-square"></i> Toutes les catégories
+            </div>
+        `);
+        $(".dropdown-divider").before($allCategories);
+
         uniqueCategories.forEach(category => {
             const $categoryItem = $(`
                 <div class="dropdown-item category-item">
@@ -73,9 +80,9 @@ async function renderBookmarks() {
 
         // Vérifiez si "Toutes les catégories" est sélectionné
         if (category === "Toutes les catégories") {
-            selectedCategories = []; // Réinitialisez les catégories sélectionnées
-            $(".category-item").removeClass("selected"); // Décochez toutes les catégories
-            $(".category-item .menuIcon").removeClass("fa-check-square").addClass("fa-square"); // Affichez l'icône fa-square pour toutes les catégories
+            selectedCategories = uniqueCategories.slice(); // Sélectionnez toutes les catégories
+            $(".category-item").addClass("selected"); // Cochez toutes les catégories
+            $(".category-item .menuIcon").removeClass("fa-square").addClass("fa-check-square"); // Affichez l'icône fa-check-square pour toutes les catégories
         } else {
             // Vérifiez si la catégorie est déjà sélectionnée
             const index = selectedCategories.indexOf(category);
@@ -107,7 +114,44 @@ async function renderBookmarks() {
         });
         restoreContentScrollPosition();
     });
-    
+
+    // Gestionnaire de clic sur "Toutes les catégories"
+    $("#allCategories").on("click", function () {
+        const allCategoriesItem = $(this);
+        const allCategoriesIcon = allCategoriesItem.find(".menuIcon");
+
+        // Si "Toutes les catégories" est déjà sélectionné, désélectionnez-le et décochez toutes les catégories
+        if (allCategoriesItem.hasClass("selected")) {
+            selectedCategories = [];
+            $(".category-item").removeClass("selected");
+            $(".category-item .menuIcon").removeClass("fa-check-square").addClass("fa-square");
+            allCategoriesIcon.removeClass("fa-check-square").addClass("fa-square");
+        } else {
+            // Sélectionnez "Toutes les catégories" et cochez toutes les catégories
+            selectedCategories = uniqueCategories.slice();
+            $(".category-item").addClass("selected");
+            $(".category-item .menuIcon").removeClass("fa-square").addClass("fa-check-square");
+            allCategoriesIcon.removeClass("fa-square").addClass("fa-check-square");
+        }
+
+        // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
+        const filteredBookmarks = bookmarks.filter(bookmark => {
+            if (selectedCategories.length === 0) {
+                return true; // Affichez tous les favoris si aucune catégorie n'est sélectionnée
+            }
+            return selectedCategories.includes(bookmark.Category);
+        });
+
+        // Réaffichez la liste des favoris mise à jour
+        eraseContent();
+        filteredBookmarks.forEach(bookmark => {
+            const $bookmarkRow = renderBookmark(bookmark);
+            $("#content").append($bookmarkRow);
+            // ...
+        });
+        restoreContentScrollPosition();
+    });
+
     if (bookmarks !== null) {
         bookmarks.forEach(bookmark => {
             const $bookmarkRow = renderBookmark(bookmark);
