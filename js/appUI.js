@@ -1,5 +1,6 @@
 //<span class="cmdIcon fa-solid fa-ellipsis-vertical"></span>
 let contentScrollPosition = 0;
+let selectedCategories = [];
 Init_UI();
 
 function Init_UI() {
@@ -46,7 +47,7 @@ async function renderBookmarks() {
     $("#abort").hide();
     let bookmarks = await Bookmarks_API.Get();
     eraseContent();
-    
+
     const categories = bookmarks.map(bookmark => bookmark.Category);
     const uniqueCategories = [...new Set(categories)];
 
@@ -63,6 +64,45 @@ async function renderBookmarks() {
             $(".dropdown-divider").before($categoryItem);
         });
     }
+
+    // Gestionnaire de clics sur les éléments de catégorie
+    $(".category-item").on("click", function () {
+        const category = $(this).text().trim(); // Récupérez le texte de la catégorie cliquée
+
+        // Vérifiez si "Toutes les catégories" est sélectionné
+        if (category === "Toutes les catégories") {
+            selectedCategories = []; // Réinitialisez les catégories sélectionnées
+            $(".category-item").removeClass("selected"); // Décochez toutes les catégories
+        } else {
+            // Vérifiez si la catégorie est déjà sélectionnée
+            const index = selectedCategories.indexOf(category);
+            if (index === -1) {
+                selectedCategories.push(category); // Ajoutez la catégorie sélectionnée au tableau
+                $(this).addClass("selected"); // Cochez la catégorie sélectionnée
+            } else {
+                selectedCategories.splice(index, 1); // Retirez la catégorie désélectionnée du tableau
+                $(this).removeClass("selected"); // Décochez la catégorie désélectionnée
+            }
+        }
+
+        // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
+        const filteredBookmarks = bookmarks.filter(bookmark => {
+            if (selectedCategories.length === 0) {
+                return true; // Affichez tous les favoris si aucune catégorie n'est sélectionnée
+            }
+            return selectedCategories.includes(bookmark.Category);
+        });
+
+        // Réaffichez la liste des favoris mise à jour
+        eraseContent();
+        filteredBookmarks.forEach(bookmark => {
+            const $bookmarkRow = renderBookmark(bookmark);
+            $("#content").append($bookmarkRow);
+            // ...
+
+        });
+        restoreContentScrollPosition();
+    });
 
     if (bookmarks !== null) {
         bookmarks.forEach(bookmark => {
