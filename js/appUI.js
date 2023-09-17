@@ -123,10 +123,10 @@ if (selectedCategories.length === uniqueCategories.length) {
 
     // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
     const filteredBookmarks = bookmarks.filter(bookmark => {
-        if (selectedCategoriesBeforeAbort.length === 0) {
-            return false; // Affichez tous les favoris si aucune catégorie n'était sélectionnée avant "Annuler"
+        if (selectedCategories.length === 0 || selectedCategories.includes("Toutes les catégories")) {
+            return true; // Affichez tous les favoris si "Toutes les catégories" est sélectionné ou si aucune catégorie n'est sélectionnée
         }
-        return selectedCategoriesBeforeAbort.includes(bookmark.Category);
+        return selectedCategories.includes(bookmark.Category);
     });
 
     // Réaffichez la liste des favoris mise à jour
@@ -135,6 +135,16 @@ if (selectedCategories.length === uniqueCategories.length) {
         const $bookmarkRow = renderBookmark(bookmark);
         $("#content").append($bookmarkRow);
     });
+
+    // Restaurez les filtres après avoir filtré les favoris
+    selectedCategories.forEach(category => {
+        const categoryItem = $(`.category-item:contains('${category}')`);
+        if (categoryItem.length > 0) {
+            categoryItem.addClass("selected");
+            categoryItem.find(".menuIcon").removeClass("fa-square").addClass("fa-check-square");
+        }
+    });
+
     restoreContentScrollPosition();
 });
 
