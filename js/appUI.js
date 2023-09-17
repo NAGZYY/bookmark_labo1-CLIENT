@@ -7,20 +7,49 @@ let categoriesRendered = false;
 Init_UI();
 
 function Init_UI() {
+    // Attachez les gestionnaires d'événements click une seule fois lors de l'initialisation
+    attachEventHandlers();
+
     renderBookmarks();
     $('#createBookmark').on("click", async function () {
         saveContentScrollPosition();
         renderCreateBookmarkForm();
     });
     $('#abort').on("click", async function () {
-        selectedCategoriesBeforeAbort = [...selectedCategories]; // Enregistrez l'état actuel des filtres
         renderBookmarks();
     });
-    
     $('#aboutCmd').on("click", function () {
         renderAbout();
     });
 }
+
+function attachEventHandlers() {
+    // Gestionnaire de clics sur les éléments de catégorie
+    $(".category-item").on("click", function () {
+        // Code de gestion des filtres...
+    });
+
+    // Gestionnaires de clics sur les favoris pour les ouvrir
+    $("#content").on("click", ".bookmarkRow", function () {
+        const bookmarkId = $(this).attr("bookmark_id");
+        const bookmark = findBookmarkById(bookmarkId);
+        if (bookmark) {
+            window.open(bookmark.Url, "_blank");
+        }
+    });
+
+    // Attached click events on command icons
+    $("#content").on("click", ".editCmd", function () {
+        saveContentScrollPosition();
+        renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
+    });
+
+    $("#content").on("click", ".deleteCmd", function () {
+        saveContentScrollPosition();
+        renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
+    });
+}
+
 
 function renderAbout() {
     saveContentScrollPosition();
@@ -130,16 +159,6 @@ if (selectedCategories.length === uniqueCategories.length) {
         
     });
 
-    bookmarks.forEach(bookmark => {
-        const $bookmarkRow = renderBookmark(bookmark);
-        $("#content").append($bookmarkRow);
-
-        $bookmarkRow.on("click", function () {
-            const url = bookmark.Url;
-            window.open(url, "_blank"); // Ouvre l'URL dans un nouvel onglet
-        });
-    });
-    
     // Réaffichez la liste des favoris mise à jour
     eraseContent();
     filteredBookmarks.forEach(bookmark => {
@@ -147,8 +166,8 @@ if (selectedCategories.length === uniqueCategories.length) {
         $("#content").append($bookmarkRow);
     });
 
-    // Restaurez les filtres après avoir filtré les favoris
-    selectedCategories.forEach(category => {
+    // Restaurez les filtres précédemment sélectionnés
+    savedSelectedCategories.forEach(category => {
         const categoryItem = $(`.category-item:contains('${category}')`);
         if (categoryItem.length > 0) {
             categoryItem.addClass("selected");
