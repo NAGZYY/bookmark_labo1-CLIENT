@@ -60,7 +60,12 @@ async function renderBookmarks() {
             saveContentScrollPosition();
             renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
         });
-        $(".bookmarkRow").on("click", function (e) { e.preventDefault(); })
+        $(".bookmarkRow").on("click", function () {
+            const url = $(this).find(".bookmarkIcon").text(); // Récupère l'URL du bookmark
+            
+            // Redirige vers l'URL du bookmark
+            window.location.href = url;
+        });        
     } else {
         renderError("Service introuvable");
     }
