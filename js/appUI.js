@@ -110,8 +110,8 @@ $(".category-item").on("click", function () {
             $("#allCategories .menuIcon").removeClass("fa-check-square").addClass("fa-square");
         } else {
             // Si aucune catégorie n'est sélectionnée, décochez "Toutes les catégories"
-            $("#allCategories").removeClass("selected");
-            $("#allCategories .menuIcon").removeClass("fa-check-square").addClass("fa-square");
+            $("#allCategories").addClass("selected");
+            $("#allCategories .menuIcon").removeClass("fa-square").addClass("fa-check-square");
         }
     }
 
