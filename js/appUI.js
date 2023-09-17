@@ -61,10 +61,10 @@ async function renderBookmarks() {
             renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
         });
         $(".bookmarkRow").on("click", function () {
-            const url = $(this).find(".bookmarkIcon").text(); // Récupère l'URL du bookmark
+            const siteUrl = bookmark.Url;
             
             // Redirige vers l'URL du bookmark
-            window.location.href = url;
+            window.location.href = siteUrl;
         });        
     } else {
         renderError("Service introuvable");
