@@ -92,7 +92,7 @@ $(".category-item").on("click", function () {
 
         // Mettez à jour l'affichage des catégories
         $(".category-item").toggleClass("selected", !categoryItem.hasClass("selected"));
-        $(".category-item .menuIcon").toggleClass("menuIcon fa fa-square", !categoryItem.hasClass("selected"));
+        $(".category-item .menuIcon").toggleClass("fa-check-square fa-square", !categoryItem.hasClass("selected"));
     } else {
         // Vérifiez si la catégorie est déjà sélectionnée
         const index = selectedCategories.indexOf(category);
@@ -104,7 +104,7 @@ $(".category-item").on("click", function () {
 
         // Mettez à jour l'affichage de la catégorie
         categoryItem.toggleClass("selected");
-        categoryIcon.toggleClass("menuIcon fa fa-square");
+        categoryIcon.toggleClass("fa-check-square fa-square");
     }
 
     // Mettez à jour la liste des favoris en fonction des catégories sélectionnées
@@ -120,7 +120,6 @@ $(".category-item").on("click", function () {
     filteredBookmarks.forEach(bookmark => {
         const $bookmarkRow = renderBookmark(bookmark);
         $("#content").append($bookmarkRow);
-        // ...
     });
     restoreContentScrollPosition();
 });
