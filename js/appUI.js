@@ -50,7 +50,6 @@ function attachEventHandlers() {
     });
 }
 
-
 function renderAbout() {
     saveContentScrollPosition();
     eraseContent();
@@ -74,6 +73,18 @@ function renderAbout() {
             </div>
         `))
 }
+
+function attachBookmarkClickHandlers() {
+    // Gestionnaires de clics sur les favoris pour les ouvrir
+    $("#content").on("click", ".bookmarkRow", function () {
+        const bookmarkId = $(this).attr("bookmark_id");
+        const bookmark = findBookmarkById(bookmarkId);
+        if (bookmark) {
+            window.open(bookmark.Url, "_blank");
+        }
+    });
+}
+
 async function renderBookmarks() {
     showWaitingGif();
     $("#actionTitle").text("Liste des favoris");
@@ -174,6 +185,9 @@ if (selectedCategories.length === uniqueCategories.length) {
             categoryItem.find(".menuIcon").removeClass("fa-square").addClass("fa-check-square");
         }
     });
+
+    // Attachez le gestionnaire d'événements click aux favoris
+    attachBookmarkClickHandlers();
 
     restoreContentScrollPosition();
 });
