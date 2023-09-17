@@ -127,8 +127,19 @@ if (selectedCategories.length === uniqueCategories.length) {
             return true; // Affichez tous les favoris si "Toutes les catégories" est sélectionné ou si aucune catégorie n'est sélectionnée
         }
         return selectedCategories.includes(bookmark.Category);
+        
     });
 
+    bookmarks.forEach(bookmark => {
+        const $bookmarkRow = renderBookmark(bookmark);
+        $("#content").append($bookmarkRow);
+
+        $bookmarkRow.on("click", function () {
+            const url = bookmark.Url;
+            window.open(url, "_blank"); // Ouvre l'URL dans un nouvel onglet
+        });
+    });
+    
     // Réaffichez la liste des favoris mise à jour
     eraseContent();
     filteredBookmarks.forEach(bookmark => {
