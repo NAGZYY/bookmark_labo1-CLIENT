@@ -91,9 +91,9 @@ $(".category-item").on("click", function () {
         $(".category-item").addClass("selected"); // Cochez toutes les catégories
         $(".category-item .menuIcon").removeClass("fa-square").addClass("fa-check-square"); // Affichez l'icône fa-check-square pour toutes les catégories
     } else {
-        selectedCategories = []; // Désélectionnez toutes les catégories
-        $(".category-item").removeClass("selected"); // Décochez toutes les catégories
-        $(".category-item .menuIcon").removeClass("fa-check-square").addClass("fa-square"); // Affichez l'icône fa-square pour toutes les catégories
+        selectedCategories = uniqueCategories.slice(); // Sélectionnez toutes les catégories
+        $(".category-item").addClass("selected"); // Cochez toutes les catégories
+        $(".category-item .menuIcon").removeClass("fa-square").addClass("fa-check-square"); // Affichez l'icône fa-check-square pour toutes les catégories
     }
 } else {
     // Vérifiez si la catégorie est déjà sélectionnée
