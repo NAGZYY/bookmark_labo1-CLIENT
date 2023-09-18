@@ -326,7 +326,6 @@ function renderBookmarkForm(bookmark = null) {
             <input type="hidden" name="Id" value="${bookmark.Id}"/>
             <img id="bookmarkIcon" src="${bookmark.Url ? googleFaviconUrl : 'bookmark-logo.svg'}" class="createBookmarkIcon" alt="Icône du favoris">
             <label for="Title" class="form-label">Titre </label>
-            <label for="Title" class="form-label">Titre </label>
             <input 
                 class="form-control Alpha"
                 name="Title" 
@@ -342,7 +341,7 @@ function renderBookmarkForm(bookmark = null) {
                 class="form-control URL"
                 name="Url"
                 id="Url"
-                placeholder="https://www.exemple.com"
+                placeholder="https://www.url.com"
                 required
                 RequireMessage="Veuillez entrer un Url" 
                 InvalidMessage="Veuillez entrer une Url valide"
